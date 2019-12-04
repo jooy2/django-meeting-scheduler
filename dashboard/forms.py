@@ -1,14 +1,15 @@
 from django import forms
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth import get_user_model
 
 from .models import *
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import User
+from flatpickr import DateTimePickerInput
 
 
 class MeetingAddForm(forms.ModelForm):
-    meet_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'form-control'}))
+    meet_date = forms.DateTimeField(widget=DateTimePickerInput(options={
+        'dateFormat': 'Y-m-d H:m',
+    }))
     meet_title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     meet_description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
                                                                     'style': 'height: 100px; min-height: 100px;'

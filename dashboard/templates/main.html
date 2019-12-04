@@ -20,22 +20,24 @@
 
     <!-- Modal content -->
     <div id="modal-add-schedule" class="d-none">
-        <form method="post">
-            <div class="row">
+        <form id="form-add-schedule" method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            <div class="row my-2">
                 <div class="col-3 app-form-label align-self-center"><i class="fa fa-calendar-day mr-2"></i>회의 일자</div>
                 <div class="col-9">{{ form.meet_date }}</div>
             </div>
-            <div class="row">
+            <div class="row my-2">
                 <div class="col-3 app-form-label align-self-center"><i class="fa fa-comment mr-2"></i>회의 제목</div>
                 <div class="col-9">{{ form.meet_title }}</div>
             </div>
-            <div class="row">
-                <div class="col-3 app-form-label align-self-center"><i class="fa fa-list mr-2"></i>주요 내용</div>
-                <div class="col-9">{{ form.meet_description }}</div>
-            </div>
-            <div class="row">
+            <div class="row my-2">
                 <div class="col-3 app-form-label align-self-center"><i class="fa fa-users mr-2"></i>참가자</div>
                 <div class="col-9">{{ form.meet_participants }}</div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 app-form-label align-self-center"><i class="fa fa-list mr-2"></i>주요 내용</div>
+                <div class="col-9">{{ form.meet_description }}</div>
             </div>
         </form>
     </div>
@@ -56,7 +58,9 @@
             modal.close();
         });
         modal.addFooterBtn('일정 추가', 'tingle-btn tingle-btn--primary', function() {
-            modal.close();
+            const form = document.getElementById('form-add-schedule');
+            form.submit();
+            //modal.close();
         });
 
         document.getElementById('btn-add-schedule').onclick = function() {
