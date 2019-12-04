@@ -17,13 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 from django.contrib.auth import views as auth_views
+from dashboard.forms import LoginForm
+from dashboard.views import RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('accounts/login/', auth_views.LoginView.as_view(
-    #    authentication_form=LoginForm
-    #)),
-    #path('accounts/logout/', auth_views.LogoutView.as_view()),
-    #path('accounts/register/', register, name='register'),
+    path('accounts/login/', auth_views.LoginView.as_view(
+        authentication_form=LoginForm
+    )),
+    path('accounts/logout/', auth_views.LogoutView.as_view()),
+    path('accounts/register/', RegisterView.as_view(), name='register'),
     path('', include('dashboard.urls')),
 ]

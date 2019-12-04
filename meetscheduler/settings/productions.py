@@ -8,7 +8,7 @@ DATABASES = {
         'NAME': 'meetscheduler',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'pa55word!!',
         'PORT': '3306',
         'OPTIONS': {'charset': 'utf8'}
     }

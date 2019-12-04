@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>회원가입</title>
+{% endblock head %}
+
+{% block title %}회원가입{% endblock title %}
+
+{% block content %}
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            회원가입에 문제가 발생했습니다.
+        </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-11 col-md-8 col-lg-6 my-4">
+                <div class="mb-4">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div class="mb-4">
+                    {{ form.nickname.label_tag }}
+                    {{ form.nickname }}
+                </div>
+                <div class="mb-4">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                </div>
+                <div class="mb-4">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                </div>
+                <div class="mb-4">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                </div>
+                <div>
+                    <button type="submit" class="app-btn color-primary w-100">계정 만들기</button>
+                    <button id="btn-login" type="button" class="app-btn w-100">이미 계정이 있으신가요? <strong>로그인</strong></button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript">
+        document.getElementById('btn-login').onclick = function() { movePage('{% url 'login' %}') };
+    </script>
+{% endblock script %}

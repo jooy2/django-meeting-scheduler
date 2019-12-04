@@ -1,0 +1,111 @@
+/* Common stylesheet */
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.navbar {
+    height: 48px;
+    box-shadow: 0 1px 2px #003873;
+}
+
+.content-wrapper {
+    flex: 1 0 0;
+    margin-top: 56px;
+}
+
+.container > div {
+    margin: 20px 0;
+}
+
+.footer {
+    background: #e8e8e8;
+    color: #858585;
+    text-align: center;
+    font-weight: 400;
+    font-size: 0.9em;
+    width: 100%;
+    left: 0;
+    right: 0;
+    padding: 40px 30px;
+    margin-top: 70px;
+}
+
+.ml-auto .dropdown-menu {
+    left: auto !important;
+    right: 0;
+} /* bootstrap 4 right menu fix */
+
+
+/* tingle fix */
+.tingle-enabled {
+    overflow: hidden !important;
+    overflow-y: scroll !important;
+}
+
+.tingle-modal {
+    top: 48px;
+}
+
+.tingle-modal--visible {
+    opacity: 1 !important;
+}
+
+.tingle-modal__close {
+    top: 5rem !important;
+}
+
+.tingle-modal--visible .tingle-modal-box__footer {
+    text-align: right !important;
+}
+
+
+.app-form {
+    border: 1px solid #f7f7f7;
+    border-radius: 30px;
+    padding: 6px 20px;
+    font-size: 0.85em;
+    color: #636363;
+    height: 32px;
+}
+
+.app-form:focus {
+    outline: 0;
+}
+
+.app-form-label {
+    color: #848484;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.app-btn {
+    cursor: pointer;
+    border: none;
+    border-radius: 30px;
+    padding: 6px 10px;
+    font-size: 0.85em;
+    background: #0055b1;
+    color: white;
+    height: 32px;
+}
+
+.app-btn:hover {
+    opacity: 0.8;
+}
+
+.app-btn:focus {
+    outline: 0;
+}
+
+.app-btn-lg {
+    height: 48px !important;
+    padding: 0 40px !important;
+}
+
+.color-gray {
+    background: #dedede;
+    color: #656565;
+}

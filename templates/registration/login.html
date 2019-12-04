@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>로그인</title>
+{% endblock head %}
+
+{% block title %}로그인{% endblock title %}
+
+{% block content %}
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            로그인에 문제가 발생했습니다.
+        </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-11 col-md-8 col-lg-6 my-4">
+                <div class="mb-4">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div class="mb-4">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+                <div>
+                    <button type="submit" class="app-btn color-primary w-100">로그인</button>
+                    <button id="btn-register" type="button" class="app-btn w-100">계정이 없으신가요? <strong>회원가입</strong></button>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript">
+        document.getElementById('btn-register').onclick = function() { movePage('{% url 'register' %}') };
+    </script>
+{% endblock script %}
