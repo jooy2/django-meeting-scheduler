@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 User = get_user_model()
 
 
-@login_required
 class MainView(View):
     @staticmethod
     def get(request):
@@ -20,17 +19,6 @@ class MainView(View):
                 participants_json.append({'value': val})
 
         return render(request, 'main.html', {'form': form, 'participants': participants_json})
-
-    @staticmethod
-    def post(request):
-        form = MeetingAddForm(request.POST)
-
-        if form.is_valid():
-            meet_schedule = form.save(commit=False)
-
-            # TODO: 폼 저장하기 전 현재 로그인 된 사용자를 proponent에 추가해야 함
-
-            return redirect('main')
 
 
 class RegisterView(View):

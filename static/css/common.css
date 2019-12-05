@@ -105,6 +105,20 @@ body {
     padding: 0 40px !important;
 }
 
+.app-weekly-feed {
+    width: 100%;
+    border: 1px solid #535353;
+}
+
+.app-weekly-body {
+    width: 100%;
+}
+
+.app-weekly-body .day {
+    width: 14.2847142%;
+    display: inline-block;
+}
+
 .color-gray {
     background: #dedede;
     color: #656565;
