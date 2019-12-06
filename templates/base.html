@@ -46,6 +46,9 @@
                     <a class="nav-link" href="{% url 'main' %}"><i class="fa fa-cogs"></i></a>
                 </li>
                 {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i></a>
+                    </li>
                 {% else %}
                     <li class="nav-item {% if request.path == '/accounts' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'login' %}"><i class="fa fa-user-alt-slash"></i></a>

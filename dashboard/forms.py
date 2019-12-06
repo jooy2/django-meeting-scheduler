@@ -8,17 +8,17 @@ from flatpickr import DateTimePickerInput
 
 class MeetingAddForm(forms.ModelForm):
     meet_date = forms.DateTimeField(widget=DateTimePickerInput(options={
-        'dateFormat': 'Y-m-d H:m',
+        'dateFormat': 'Y-m-d H:i',
     }))
     meet_title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    meet_description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
+    meet_desc = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
                                                                     'style': 'height: 100px; min-height: 100px;'
                                                                              'max-height: 200px;'}))
-    meet_participants = forms.CharField(widget=forms.SelectMultiple(attrs={'class': 'form-control choices'}))
+    participants = forms.CharField(widget=forms.SelectMultiple(attrs={'class': 'form-control choices'}))
 
     class Meta:
         model = Meeting
-        fields = ('meet_date', 'meet_title', 'meet_description', 'meet_participants')
+        fields = ('meet_date', 'meet_title', 'meet_desc', 'participants')
 
     def __init__(self, *args, **kwargs):
         super(MeetingAddForm, self).__init__(*args, **kwargs)

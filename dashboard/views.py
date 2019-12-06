@@ -1,14 +1,14 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
 from django.views.generic import View
-from .forms import MeetingAddForm, RegisterForm
+from .forms import MeetingAddForm, RegisterForm, settings, Meeting
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
 
-@login_required
-class MainView(View):
+class MainView(LoginRequiredMixin, View):
     @staticmethod
     def get(request):
         form = MeetingAddForm
@@ -21,16 +21,25 @@ class MainView(View):
 
         return render(request, 'main.html', {'form': form, 'participants': participants_json})
 
-    @staticmethod
-    def post(request):
+    # TODO: 폼 저장하기 전 현재 로그인 된 사용자를 proponent에 추가해야 함
+
+    @login_required
+    def post(self, request):
         form = MeetingAddForm(request.POST)
 
         if form.is_valid():
+            participants = request.POST.getlist('participants')
+            users = User.objects.all()
+            for x in participants:
+                participant_id = users.filter(nickname=x).values_list(flat=True).distinct()
+                print('참여자 : ' + participant_id)
+
             meet_schedule = form.save(commit=False)
-
-            # TODO: 폼 저장하기 전 현재 로그인 된 사용자를 proponent에 추가해야 함
-
+            meet_schedule.proponent = request.user
+            # meet_schedule.save()
             return redirect('main')
+
+        return render(request, 'main.html', {'form': form})
 
 
 class RegisterView(View):
