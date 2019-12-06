@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import View
-from .forms import MeetingAddForm, RegisterForm, settings, Meeting
+from .forms import MeetingAddForm, RegisterForm
 from .models import Meeting
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -35,7 +35,8 @@ class MainView(LoginRequiredMixin, View):
             )
 
             for data in schedule_data:
-                schedule_json[data.id] = ({'date': current_date_format, 'title': data.meet_title})
+                schedule_json[data.id] = ({'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'),
+                                           'date': current_date_format, 'title': data.meet_title})
 
         return render(request, 'main.html', {
             'form': form,
@@ -44,25 +45,25 @@ class MainView(LoginRequiredMixin, View):
             'date': date_array,
         })
 
-    # TODO: 폼 저장하기 전 현재 로그인 된 사용자를 proponent에 추가해야 함
-
+    @staticmethod
     @login_required
-    def post(self, request):
+    def post(request):
         form = MeetingAddForm(request.POST)
 
         if form.is_valid():
             participants = request.POST.getlist('participants')
-            users = User.objects.all()
-            for x in participants:
-                participant_id = users.filter(nickname=x).values_list(flat=True).distinct()
-                print('참여자 : ' + participant_id)
+            all_user = User.objects.values_list('id', 'nickname')
 
             meet_schedule = form.save(commit=False)
             meet_schedule.proponent = request.user
-            # meet_schedule.save()
-            return redirect('main')
+            meet_schedule.save()
 
-        return render(request, 'main.html', {'form': form})
+            for x in participants:
+                participant_id = all_user.filter(nickname=x).values_list('id', flat=True)
+                for y in participant_id:
+                    meet_schedule.participants.add(y)
+
+        return redirect('main')
 
 
 class RegisterView(View):
@@ -82,3 +83,9 @@ class RegisterView(View):
         else:
             form = RegisterForm(form.errors)
             return render(request, 'registration/register.html', {'form': form})
+
+
+class MeetingDetailView(View):
+    @staticmethod
+    def get(request, pk):
+        return render(request, 'meeting_detail.html', {})

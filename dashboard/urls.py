@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     path('', views.MainView.as_view(), name='main'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('schedule/view/week', views.MainView.as_view(), name='schedule_view_weekly')
+    path('schedule/view/week', views.MainView.as_view(), name='schedule_view_weekly'),
+    path('meeting/<int:pk>/', views.MeetingDetailView.as_view(), name='meeting_detail'),
 ]

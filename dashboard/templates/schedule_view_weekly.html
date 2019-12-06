@@ -16,13 +16,10 @@
         const jsonData = {{ schedule|safe }};
 
         for (let key in jsonData) {
-            console.log(key + ' and ' + jsonData[key].date);
-            document.getElementById('schedule-' + jsonData[key].date).innerHTML += "<span class='schedule-item'>" +
+            document.getElementById('schedule-' + jsonData[key].date).innerHTML += "<div onclick='location.href=\"{% url 'meeting_detail' pk=123 %}\".replace(\"123\", "+jsonData[key].id+")' class='schedule-item'><span class='time'>" + jsonData[key].time + "</span> " +
                 jsonData[key].title +
-                "</span>"
+                "</div>"
         }
-
-        //console.log(dateJson);
     </script>
 {% endblock %}
 
