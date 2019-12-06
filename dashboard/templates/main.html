@@ -31,11 +31,11 @@
             </div>
             <div class="row my-2">
                 <div class="col-3 app-form-label align-self-center"><i class="fa fa-users mr-2"></i>참가자</div>
-                <div class="col-9">{{ form.meet_participants }}</div>
+                <div class="col-9">{{ form.participants }}</div>
             </div>
             <div class="row my-2">
                 <div class="col-3 app-form-label align-self-center"><i class="fa fa-list mr-2"></i>주요 내용</div>
-                <div class="col-9">{{ form.meet_description }}</div>
+                <div class="col-9">{{ form.meet_desc }}</div>
             </div>
         </form>
     </div>
@@ -66,7 +66,7 @@
         };
     </script>
     <script type="text/javascript">
-        const participantsForm = document.querySelector('#id_meet_participants');
+        const participantsForm = document.querySelector('#id_participants');
         const multipleChoices = new Choices(participantsForm, {
             choices: {{participants|safe}},
             duplicateItemsAllowed: false,
