@@ -14,14 +14,24 @@ class MeetingAddForm(forms.ModelForm):
     meet_desc = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
                                                                     'style': 'height: 100px; min-height: 100px;'
                                                                              'max-height: 200px;'}))
-    participants = forms.CharField(widget=forms.SelectMultiple(attrs={'class': 'form-control choices'}))
+    participants = forms.CharField(widget=forms.SelectMultiple(attrs={'class': 'form-control choices'}), required=False)
+    meet_contents = summer_fields.SummernoteTextFormField(label='', widget=forms.TextInput(), required=False, error_messages={'required': (u'내용을 입력해주세요'), })
 
     class Meta:
         model = Meeting
-        fields = ('meet_date', 'meet_title', 'meet_desc', 'participants')
+        fields = ('meet_date', 'meet_title', 'meet_desc', 'participants', 'meet_contents')
 
     def __init__(self, *args, **kwargs):
         super(MeetingAddForm, self).__init__(*args, **kwargs)
+
+
+class CommentForm(forms.ModelForm):
+    author = forms.CharField(label='닉네임', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '닉네임', 'aria-label': '닉네임'}), required=True)
+    text = forms.CharField(label='내용', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '내용', 'aria-label': '내용'}), required=True)
+
+    class Meta:
+        model = Comment
+        fields = ('author', 'text',)
 
 
 class LoginForm(AuthenticationForm):

@@ -175,3 +175,7 @@ body {
     background: #dedede;
     color: #656565;
 }
+
+.comment-box { padding: 0 0 0 15px; }
+.comment-box>textarea{ height: 80px; }
+textarea { resize: none; }
