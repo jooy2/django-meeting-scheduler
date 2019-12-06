@@ -1,8 +1,11 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
-from .forms import MeetingAddForm, RegisterForm
-from .models import Meeting
+from .forms import MeetingAddForm, RegisterForm, CommentForm
+from .models import Meeting, Comment
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 import datetime
@@ -88,4 +91,51 @@ class RegisterView(View):
 class MeetingDetailView(View):
     @staticmethod
     def get(request, pk):
-        return render(request, 'meeting_detail.html', {})
+        meeting = get_object_or_404(Meeting, pk=pk)
+        form = MeetingAddForm(instance=meeting)
+        comment = CommentForm()
+        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form, 'comment': comment})
+
+    @staticmethod
+    @login_required
+    def post(request, pk):
+        meeting = get_object_or_404(Meeting, pk=pk)
+        form = MeetingAddForm(request.POST, instance=meeting)
+        comment = CommentForm(request.POST)
+
+        if form.is_valid():
+            print('meeting 성공')
+            participants = request.POST.getlist('participants')
+            all_user = User.objects.values_list('id', 'nickname')
+
+            meet_schedule = form.save(commit=False)
+            meet_schedule.proponent = request.user
+            meet_schedule.save()
+
+            if participants:
+                for x in participants:
+                    participant_id = all_user.filter(nickname=x).values_list('id', flat=True)
+                    for y in participant_id:
+                        meet_schedule.participants.add(y)
+            return redirect('main')
+        elif comment.is_valid():
+            print('comment 성공')
+            comment = comment.save(commit=False)
+            comment.meet_schedule = meeting
+            comment.save()
+            return redirect('meeting_detail', pk=meeting.pk)
+        else:
+            print('댓글삭제')
+            comment_id = request.POST.get('pk')
+            comment = Comment.objects.filter(id=comment_id).values_list(flat=True).distinct()
+            clist = list(comment)
+            print(clist[-1])
+            if clist[-1] == comment_id:
+                comment = get_object_or_404(Comment, pk=comment_id)
+                comment.delete()
+                success = True
+                message = '댓글이 삭제 되었습니다.'
+                context = {'message': message, 'success': success}
+                return HttpResponse(json.dumps(context))
+
+        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form})
