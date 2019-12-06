@@ -1,17 +1,28 @@
 {% block content %}
     <div class="app-weekly-feed">
         <div class="app-weekly-body">
-            <div class="day">1</div>
-            <div class="day">1</div>
-            <div class="day">1</div>
-            <div class="day">1</div>
-            <div class="day">1</div>
-            <div class="day">1</div>
-            <div class="day">1</div>
+            {% for date in date %}
+                <div class="date-row">
+                    <div id="date-{{ date }}" class="day">{{ date }}</div>
+                    <div id="schedule-{{ date }}" class="schedule"></div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock content %}
 
 {% block script %}
+    <script type="text/javascript">
+        const jsonData = {{ schedule|safe }};
+
+        for (let key in jsonData) {
+            console.log(key + ' and ' + jsonData[key].date);
+            document.getElementById('schedule-' + jsonData[key].date).innerHTML += "<span class='schedule-item'>" +
+                jsonData[key].title +
+                "</span>"
+        }
+
+        //console.log(dateJson);
+    </script>
 {% endblock %}
 

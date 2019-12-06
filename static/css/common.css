@@ -107,16 +107,51 @@ body {
 
 .app-weekly-feed {
     width: 100%;
-    border: 1px solid #535353;
+    height: 100%;
+    border: 1px solid #cccccc;
+    background: #fbfbfb;
 }
 
 .app-weekly-body {
-    width: 100%;
+    color: #676767;
+    height: 100%;
+    text-align: center;
+    font-weight: 500;
+}
+
+.app-weekly-body .date-row {
+    height: 100%;
+    padding: 5px 0;
 }
 
 .app-weekly-body .day {
-    width: 14.2847142%;
+    background: #47607b;
+    color: white;
+    padding: 5px 0;
+    width: 20%;
+    height: 100%;
     display: inline-block;
+}
+
+.app-weekly-body .schedule {
+    width: 79%;
+    height: 100%;
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.app-weekly-body .schedule span:hover {
+    opacity: 0.8;
+}
+
+.app-weekly-body .schedule-item {
+    background: #4495ec;
+    color: white;
+    margin: 0 4px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 4px 6px;
+    border-radius: 20px;
 }
 
 .color-gray {
