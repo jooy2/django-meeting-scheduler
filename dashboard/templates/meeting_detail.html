@@ -7,72 +7,86 @@
 {% block title %}Meet Scheduler{% endblock title %}
 
 {% block content %}
-    <div class="row no-gutters">
-        <form method="POST" class="meeting-form" enctype="multipart/form-data">{% csrf_token %}
-            {{ form.media }}
-            <div class="row my-2">
-                <div class="col-3 app-form-label align-self-center"><i class="fa fa-calendar-day mr-2"></i>회의 일자</div>
-                <div class="col-9">{{ form.meet_date }}</div>
-            </div>
-            <div class="row my-2">
-                <div class="col-3 app-form-label align-self-center"><i class="fa fa-comment mr-2"></i>회의 제목</div>
-                <div class="col-9">{{ form.meet_title }}</div>
-            </div>
-            <div class="row my-2">
-                <div class="col-3 app-form-label align-self-center"><i class="fa fa-users mr-2"></i>참가자</div>
-                <div class="col-9">{{ form.participants }}</div>
-            </div>
-            <div class="row my-2">
-                <div class="col-3 app-form-label align-self-center"><i class="fa fa-list mr-2"></i>주요 내용</div>
-                <div class="col-9">{{ form.meet_desc }}</div>
-            </div>
-            <div class="row my-2">
-                <div class="col-3 app-form-label align-self-center"><i class="fa fa-list mr-2"></i>회의 내용</div>
-                <div class="col-9">{{ form.meet_contents }}</div>
-            </div>
-            <div class="form-group row">
-                <label for="exampleFormControlFile1" class="col-sm-1 col-form-label">첨부파일</label>
-                <div class="col-sm-10" enctype="multipart/form-data">
-                    {{ form.file1 }}
+    <div class="app-schedule-body">
+        <div class="meeting-form">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.media }}
+                <div class="row my-2">
+                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-calendar-day mr-2"></i>회의 일자</div>
+                    <div class="col-9">{{ form.meet_date }}</div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="exampleFormControlFile1" class="col-sm-1 col-form-label">첨부파일</label>
-                <div class="col-sm-10" enctype="multipart/form-data">
-                    {{ form.file2 }}
+                <div class="row my-2">
+                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-comment mr-2"></i>회의 제목</div>
+                    <div class="col-9">{{ form.meet_title }}</div>
                 </div>
-            </div>
-            <button type="submit" class="save btn btn-primary">저장</button>
-            <a href="{% url 'main' %}">
-                <button type="button" class="save btn btn-danger">취소</button>
-            </a>
-        </form>
+                <div class="row my-2">
+                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-users mr-2"></i>참가자</div>
+                    <div class="col-9">{{ form.participants }}</div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-bookmark mr-2"></i>주제</div>
+                    <div class="col-9">{{ form.meet_desc }}</div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-list mr-2"></i>회의 내용</div>
+                    <div class="col-9">{{ form.meet_contents }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button onclick="location.href='{% url 'main' %}'" type="button" class="app-btn app-btn-lg color-gray mr-2">목록</button>
+                        <button type="submit" class="app-btn app-btn-lg">변경내용 저장</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12"><hr></div>
+                </div>
+            </form>
+        </div>
     </div>
-    <hr>
-    <form method="POST" class="comment-form">{% csrf_token %}
-        <div class="row">
-            <div class="comment-box col-md-11">
-                {{ comment.text }}
+    <div class="app-comment-head">
+        <h4><i class="fa fa-comment-alt mr-2"></i>댓글</h4>
+    </div>
+    <div class="app-comment-body">
+         <form method="POST" class="comment-form">{% csrf_token %}
+            <div class="row">
+                <div class="col-md-2 comment-form">
+                    {{ comment.author }}
+                </div>
+                <div class="comment-box col-md-9">
+                    {{ comment.text }}
+                </div>
+                <button type="submit" class="save btn btn-default">추가</button>
             </div>
-            <button type="submit" class="save btn btn-default">추가</button>
-        </div>
-    </form>
-    {% for comment in meeting.comments.all %}
-        <div class="comment row">
-            <div class="col-md-12">{{ comment.created_date }}</div>
-            <div class="row date">
-                <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
-                <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제
-                </button>
+        </form>
+        {% for comment in meeting.comments.all %}
+            <div class="comment row">
+                <div class="col-md-9">{{ comment.created_date }}</div>
+                <div class="row date">
+                    <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
+                    <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제</button>
+                </div>
             </div>
-        </div>
         {% empty %}
-        <p>댓글이 없습니다</p>
-    {% endfor %}
+            <p>댓글이 없습니다</p>
+        {% endfor %}
+    </div>
 {% endblock content %}
 
 {% block script %}
     <script type="text/javascript">
+        const participantsForm = document.querySelector('#id_participants');
+        const multipleChoices = new Choices(participantsForm, {
+            choices: {{ current_participants|safe }},
+            duplicateItemsAllowed: false,
+            searchEnabled: true,
+            searchChoices: true,
+            removeItems: true,
+            removeItemButton: true,
+            noResultsText: '가입된 사용자가 없습니다.',
+            noChoicesText: '사용자를 선택해주세요.',
+            itemSelectText: '클릭하여 선택',
+        });
     </script>
 {% endblock %}
 

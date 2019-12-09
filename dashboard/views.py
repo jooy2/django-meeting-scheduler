@@ -18,16 +18,10 @@ class MainView(LoginRequiredMixin, View):
     @staticmethod
     def get(request):
         form = MeetingAddForm
-        participants_data = User.objects.values_list('nickname', flat=True)
-        participants_json = []
         schedule_json = {}
         date_array = []
         date_now = datetime.datetime.now()
-
-        # get participants
-        for val in participants_data:
-            if not val == request.user.nickname:
-                participants_json.append({'value': val})
+        participants = Participants.get_all_participants()
                 
         # get schedule 7 days
         for current_days in range(0, 7):
@@ -52,12 +46,12 @@ class MainView(LoginRequiredMixin, View):
 
                 schedule_json[data.id] = ({
                     'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'join_stat': joined
+                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
                 })
 
         return render(request, 'main.html', {
             'form': form,
-            'participants': participants_json,
+            'participants': participants,
             'schedule': schedule_json,
             'all_date': date_array,
         })
@@ -108,7 +102,12 @@ class MeetingDetailView(View):
         meeting = get_object_or_404(Meeting, pk=pk)
         form = MeetingAddForm(instance=meeting)
         comment = CommentForm()
-        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form, 'comment': comment})
+        participants = Participants.get_all_participants()
+        current_participants = Participants.get_current_participants(pk)
+        print(current_participants)
+        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form,
+                                                       'comment': comment, 'participants': participants,
+                                                       'current_participants': current_participants})
 
     @staticmethod
     @login_required
@@ -116,6 +115,8 @@ class MeetingDetailView(View):
         meeting = get_object_or_404(Meeting, pk=pk)
         form = MeetingAddForm(request.POST, request.FILES, instance=meeting)
         comment = CommentForm(request.POST)
+        participants = Participants.get_all_participants()
+        current_participants = Participants.get_current_participants(pk)
         files = request.FILES.getlist('file_field')
 
         if form.is_valid():
@@ -130,11 +131,12 @@ class MeetingDetailView(View):
             meet_schedule.save()
             print('meeting 성공')
 
-            if participants:
-                for x in participants:
-                    participant_id = all_user.filter(nickname=x).values_list('id', flat=True)
-                    for y in participant_id:
-                        meet_schedule.participants.add(y)
+            meet_schedule.participants.remove(*meet_schedule.participants.all())
+
+            for x in participants:
+                participant_id = all_user.filter(nickname=x).values_list('id', flat=True)
+                for y in participant_id:
+                    meet_schedule.participants.add(y)
             return redirect('main')
         elif comment.is_valid():
             print('comment 성공')
@@ -157,4 +159,36 @@ class MeetingDetailView(View):
             #     context = {'message': message, 'success': success}
             #     return HttpResponse(json.dumps(context))
 
-        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form})
+        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form,
+                                                       'participants': participants,
+                                                       'current_participants': current_participants})
+
+
+class Participants:
+    @staticmethod
+    def get_all_participants():
+        participants_data = User.objects.values_list('nickname', flat=True)
+        participants_json = []
+
+        for val in participants_data:
+            participants_json.append({'value': val})
+
+        return participants_json
+
+    @staticmethod
+    def get_current_participants(pk):
+        user = User.objects
+        user_data = user.values_list('id', 'nickname')
+        participants_data = Meeting.objects.filter(id=pk).values_list('participants')
+        participants_json = []
+
+        for val in user_data:
+            query_data = participants_data.filter(participants=val)
+
+            if query_data.exists():
+                nickname = user.filter(id=val[0]).values_list('nickname', flat=True)[0]
+                participants_json.append({'value': nickname, 'selected': 1})
+            else:
+                participants_json.append({'value': val[1], 'selected': 0})
+
+        return participants_json
