@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
@@ -112,19 +113,23 @@ class MeetingDetailView(View):
     @login_required
     def post(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
-        form = MeetingAddForm(request.POST, instance=meeting)
+        form = MeetingAddForm(request.POST, request.FILES, instance=meeting)
         comment = CommentForm(request.POST)
         participants = Participants.get_all_participants()
         current_participants = Participants.get_current_participants(pk)
+        files = request.FILES.getlist('file_field')
 
         if form.is_valid():
-            print('meeting 성공')
             participants = request.POST.getlist('participants')
             all_user = User.objects.values_list('id', 'nickname')
 
             meet_schedule = form.save(commit=False)
             meet_schedule.proponent = request.user
+            for file in files:
+                a = getattr(meet_schedule, file)
+                os.system('chmod 777 {}'.format(a.path))
             meet_schedule.save()
+            print('meeting 성공')
 
             meet_schedule.participants.remove(*meet_schedule.participants.all())
 
@@ -137,21 +142,22 @@ class MeetingDetailView(View):
             print('comment 성공')
             comment = comment.save(commit=False)
             comment.meet_schedule = meeting
+            comment.author = request.user
             comment.save()
             return redirect('meeting_detail', pk=meeting.pk)
         else:
-            print('댓글삭제')
-            comment_id = request.POST.get('pk')
-            comment = Comment.objects.filter(id=comment_id).values_list(flat=True).distinct()
-            clist = list(comment)
-            print(clist[-1])
-            if clist[-1] == comment_id:
-                comment = get_object_or_404(Comment, pk=comment_id)
-                comment.delete()
-                success = True
-                message = '댓글이 삭제 되었습니다.'
-                context = {'message': message, 'success': success}
-                return HttpResponse(json.dumps(context))
+            print('실패')
+            # comment_id = request.POST.get('pk')
+            # comment = Comment.objects.filter(id=comment_id).values_list(flat=True).distinct()
+            # clist = list(comment)
+            # print(clist[-1])
+            # if clist[-1] == comment_id:
+            #     comment = get_object_or_404(Comment, pk=comment_id)
+            #     comment.delete()
+            #     success = True
+            #     message = '댓글이 삭제 되었습니다.'
+            #     context = {'message': message, 'success': success}
+            #     return HttpResponse(json.dumps(context))
 
         return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form,
                                                        'participants': participants,

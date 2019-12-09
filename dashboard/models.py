@@ -19,11 +19,13 @@ class Meeting(summer_model.Attachment):
     meet_contents = summer_fields.SummernoteTextField(default='')
     created_date = models.DateTimeField(default=timezone.now)
     progress = models.BooleanField(default=False)
+    file1 = models.FileField(blank=True, null=True, upload_to='files/%Y/%m/%d')  # 첨부파일
+    file2 = models.FileField(blank=True, null=True, upload_to='files/%Y/%m/%d')
 
 
 class Comment(models.Model):
     meet_schedule = models.ForeignKey('Meeting', on_delete=models.CASCADE, related_name='comments')
-    author = models.CharField(max_length=20)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='author')
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
 
