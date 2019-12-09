@@ -163,17 +163,6 @@ class MeetingEditView(View):
             return redirect('main')
         else:
             print('실패')
-            # comment_id = request.POST.get('pk')
-            # comment = Comment.objects.filter(id=comment_id).values_list(flat=True).distinct()
-            # clist = list(comment)
-            # print(clist[-1])
-            # if clist[-1] == comment_id:
-            #     comment = get_object_or_404(Comment, pk=comment_id)
-            #     comment.delete()
-            #     success = True
-            #     message = '댓글이 삭제 되었습니다.'
-            #     context = {'message': message, 'success': success}
-            #     return HttpResponse(json.dumps(context))
 
         return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
                                                        'participants': participants,
@@ -215,10 +204,14 @@ class Comments:
     def delete(request):
         print('send request')
         print(request)
-
-        json_data = json.loads(request.body)
-        comment_id = json_data['pk']
-
-        message = ''
+        if request.method == "POST":
+            json_data = json.loads(request.body)
+            comment_id = json_data['pk']
+            comment = get_object_or_404(Comment, pk=comment_id)
+            if comment.author.pk == request.user.pk:
+                comment.delete()
+                message = 'success'
+            else:
+                message = 'fail'
         context = {'success': message}
-        return HttpResponse(json.dumps(context), content_type='application/json')
+        return HttpResponse(json.dumps(context, ensure_ascii=False), content_type='application/json')

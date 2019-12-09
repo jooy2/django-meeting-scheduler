@@ -90,7 +90,7 @@
                         }
                     };
                     xhr.open('POST', '{% url 'comment_delete' %}');
-                    xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                    xhr.setRequestHeader('Content-Type', 'application/json;');
                     addCsrfToken(xhr);
                     xhr.send(JSON.stringify({
                         'pk': el.getAttribute('data-id'),
