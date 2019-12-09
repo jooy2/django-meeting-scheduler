@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Meet Scheduler</title>
+{% endblock head %}
+
+{% block title %}Meet Scheduler{% endblock title %}
+
+{% block content %}
+    <div class="app-schedule-body">
+        <div class="col-12">
+            <h2>{{ meeting.meet_title }}</h2>
+            <p>{{ meeting.meet_date }}</p>
+        </div>
+        <div class="col-12">
+            {{ meeting.meet_desc }}
+        </div>
+        <div class="col-12 text-right">
+            <button class="app-btn app-btn-lg color-gray mr-2" onclick="location.href='{% url 'main' %}'">목록</button>
+            <button class="app-btn app-btn-lg"
+                    onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
+                회의록 수정
+            </button>
+        </div>
+    </div>
+    <div class="app-comment-head">
+        <h4><i class="fa fa-comment-alt mr-2"></i>댓글</h4>
+    </div>
+    <div class="app-comment-body">
+         <form method="POST" class="comment-form">{% csrf_token %}
+            <div class="row">
+                <div class="col-md-2 comment-form">
+                    {{ comment.author }}
+                </div>
+                <div class="comment-box col-md-9">
+                    {{ comment.text }}
+                </div>
+                <button type="submit" class="save btn btn-default">추가</button>
+            </div>
+        </form>
+        {% for comment in meeting.comments.all %}
+            <div class="comment row">
+                <div class="col-md-9">{{ comment.created_date }}</div>
+                <div class="row date">
+                    <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
+                    <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제</button>
+                </div>
+            </div>
+        {% empty %}
+            <p>댓글이 없습니다</p>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block script %}
+{% endblock %}
+

@@ -85,7 +85,7 @@ class RegisterView(View):
         return render(request, 'registration/register.html', {'form': form})
 
     @staticmethod
-    def post(request):
+    def post(request, pk):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
@@ -96,25 +96,48 @@ class RegisterView(View):
             return render(request, 'registration/register.html', {'form': form})
 
 
+class MeetingDetailView(View):
+    @staticmethod
+    def get(request, pk):
+        meeting = get_object_or_404(Meeting, pk=pk)
+        comment_form = CommentForm()
+
+        return render(request, 'meeting_detail.html', {
+            'meeting': meeting,
+            'comment': comment_form
+        })
+
+    @staticmethod
+    def post(request, pk):
+        meeting = get_object_or_404(Meeting, pk=pk)
+        comment = CommentForm(request.POST)
+
+        if comment.is_valid():
+            print('comment 성공')
+            comment = comment.save(commit=False)
+            comment.meet_schedule = meeting
+            comment.author = request.user
+            comment.save()
+            return redirect('meeting_detail', pk=meeting.pk)
+
+
 class MeetingEditView(View):
     @staticmethod
     def get(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
         form = MeetingAddForm(instance=meeting)
-        comment = CommentForm()
         participants = Participants.get_all_participants()
         current_participants = Participants.get_current_participants(pk)
         print(current_participants)
         return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
-                                                       'comment': comment, 'participants': participants,
-                                                       'current_participants': current_participants})
+                                                     'participants': participants,
+                                                     'current_participants': current_participants})
 
     @staticmethod
     @login_required
     def post(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
         form = MeetingAddForm(request.POST, request.FILES, instance=meeting)
-        comment = CommentForm(request.POST)
         participants = Participants.get_all_participants()
         current_participants = Participants.get_current_participants(pk)
         files = request.FILES.getlist('file_field')
@@ -138,13 +161,6 @@ class MeetingEditView(View):
                 for y in participant_id:
                     meet_schedule.participants.add(y)
             return redirect('main')
-        elif comment.is_valid():
-            print('comment 성공')
-            comment = comment.save(commit=False)
-            comment.meet_schedule = meeting
-            comment.author = request.user
-            comment.save()
-            return redirect('meeting_edit', pk=meeting.pk)
         else:
             print('실패')
             # comment_id = request.POST.get('pk')

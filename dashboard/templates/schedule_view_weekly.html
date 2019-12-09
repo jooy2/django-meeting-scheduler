@@ -22,7 +22,7 @@
 
         for (let key in jsonData) {
             let data = jsonData[key];
-            let url = "{% url 'meeting_edit' pk=123 %}".replace('123', data.id);
+            let url = "{% url 'meeting_detail' pk=123 %}".replace('123', data.id);
             let ended = "";
 
             if (data.time_expired === "1") ended = "time-ended";
