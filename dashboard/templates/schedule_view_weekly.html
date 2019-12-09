@@ -28,7 +28,7 @@
             if (data.time_expired === "1") ended = "time-ended";
 
             let htmlData =
-                "<div onclick='location.href=\"" + url + "\"' " +
+                "<div data-joined='"+data.joined+"' onclick='location.href=\"" + url + "\"' " +
                 "class='schedule-item " + ended + "'>" +
                     "<span class='time'>" + data.time + "</span>" +
                     stringLimit(data.title, 15) +
@@ -37,6 +37,8 @@
         }
 
         document.getElementById('btn-only-me').onclick = function() {
+            showAllSchedule();
+
             if (this.getAttribute('data-active') === 'true') {
                 this.classList.remove('active');
                 this.setAttribute('data-active', 'false');
@@ -47,6 +49,24 @@
                 this.setAttribute('data-active', 'true');
                 this.children[0].classList.remove('fa-circle');
                 this.children[0].classList.add('fa-check-circle');
+                filterSchedule();
+            }
+        };
+
+        function filterSchedule() {
+            const schedule = document.getElementsByClassName('schedule-item');
+
+            for (let i=0; i<schedule.length; i++) {
+                if (schedule[i].getAttribute('data-joined') === '0')
+                    schedule[i].classList.add('d-none');
+            }
+        }
+
+        function showAllSchedule() {
+            const schedule = document.getElementsByClassName('schedule-item');
+
+            for (let i=0; i<schedule.length; i++) {
+                schedule[i].classList.remove('d-none');
             }
         }
     </script>

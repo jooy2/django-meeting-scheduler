@@ -119,7 +119,7 @@ SUMMERNOTE_CONFIG = {
     'summernote': {
         # As an example, using Summernote Air-mode
         'airMode': False,
-        # 'width': '100%',
+        'width': '100%',
         'height': '480',
     },
     'disable_attachment': True,

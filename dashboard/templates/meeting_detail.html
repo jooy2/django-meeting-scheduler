@@ -7,7 +7,7 @@
 {% block title %}Meet Scheduler{% endblock title %}
 
 {% block content %}
-    <div class="row no-gutters">
+    <div class="app-schedule-body">
         <form method="POST" class="meeting-form">{% csrf_token %}
             {{ form.media }}
             <div class="row my-2">
@@ -36,28 +36,30 @@
             </a>
         </form>
     </div><hr>
-     <form method="POST" class="comment-form">{% csrf_token %}
-        <div class="row">
-            <div class="col-md-2 comment-form">
-                {{ comment.author }}
+    <div class="app-comment-body">
+         <form method="POST" class="comment-form">{% csrf_token %}
+            <div class="row">
+                <div class="col-md-2 comment-form">
+                    {{ comment.author }}
+                </div>
+                <div class="comment-box col-md-9">
+                    {{ comment.text }}
+                </div>
+                <button type="submit" class="save btn btn-default">추가</button>
             </div>
-            <div class="comment-box col-md-9">
-                {{ comment.text }}
+        </form>
+        {% for comment in meeting.comments.all %}
+            <div class="comment row">
+                <div class="col-md-9">{{ comment.created_date }}</div>
+                <div class="row date">
+                    <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
+                    <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제</button>
+                </div>
             </div>
-            <button type="submit" class="save btn btn-default">추가</button>
-        </div>
-    </form>
-    {% for comment in meeting.comments.all %}
-        <div class="comment row">
-            <div class="col-md-9">{{ comment.created_date }}</div>
-            <div class="row date">
-                <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
-                <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제</button>
-            </div>
-        </div>
-    {% empty %}
-        <p>댓글이 없습니다</p>
-    {% endfor %}
+        {% empty %}
+            <p>댓글이 없습니다</p>
+        {% endfor %}
+    </div>
 {% endblock content %}
 
 {% block script %}

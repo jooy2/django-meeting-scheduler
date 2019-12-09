@@ -217,6 +217,14 @@ label {
     color: #656565;
 }
 
+.app-schedule-body {
+    width: 100%;
+}
+
+.app-comment-body {
+    width: 100%;
+}
+
 .comment-box { padding: 0 0 0 15px; }
 .comment-box>textarea{ height: 80px; }
 textarea { resize: none; }

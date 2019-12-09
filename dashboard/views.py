@@ -25,8 +25,7 @@ class MainView(LoginRequiredMixin, View):
 
         # get participants
         for val in participants_data:
-            if not val == request.user.nickname:
-                participants_json.append({'value': val})
+            participants_json.append({'value': val})
                 
         # get schedule 7 days
         for current_days in range(0, 7):
@@ -51,7 +50,7 @@ class MainView(LoginRequiredMixin, View):
 
                 schedule_json[data.id] = ({
                     'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'join_stat': joined
+                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
                 })
 
         return render(request, 'main.html', {
