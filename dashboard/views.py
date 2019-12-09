@@ -102,13 +102,13 @@ class RegisterView(View):
             return render(request, 'registration/register.html', {'form': form})
 
 
-class MeetingDetailView(View):
+class MeetingEditView(View):
     @staticmethod
     def get(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
         form = MeetingAddForm(instance=meeting)
         comment = CommentForm()
-        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form, 'comment': comment})
+        return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form, 'comment': comment})
 
     @staticmethod
     @login_required
@@ -157,4 +157,4 @@ class MeetingDetailView(View):
             #     context = {'message': message, 'success': success}
             #     return HttpResponse(json.dumps(context))
 
-        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form})
+        return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form})
