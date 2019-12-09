@@ -225,6 +225,31 @@ label {
     width: 100%;
 }
 
+.app-schedule-title {
+    font-size: 3.3em;
+    color: #656565;
+}
+
+.app-schedule-sub-title {
+    margin-top: 60px;
+    color: #7d7d7d;
+}
+
+.app-schedule-meta {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 0.9em;
+}
+
+.app-schedule-meta:last-child {
+    margin-bottom: 30px !important;
+}
+
+.app-schedule-aside {
+    border-radius: 10px;
+    background: #f3f3f3;
+}
+
 .app-comment-body {
     width: 100%;
 }

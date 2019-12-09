@@ -8,20 +8,45 @@
 
 {% block content %}
     <div class="app-schedule-body">
-        <div class="col-12">
-            <h2>{{ meeting.meet_title }}</h2>
-            <p>{{ meeting.meet_date }}</p>
+        <div class="row">
+            <div class="col-12">
+                <h2 class="app-schedule-title">{{ meeting.meet_title }}</h2>
+                <p class="app-schedule-meta"><i class="fa fa-clock mr-2"></i>{{ meeting.meet_date }}</p>
+                <p class="app-schedule-meta"><i class="fa fa-user-alt mr-2"></i>{{ meeting.proponent }}이 제안함</p>
+                <div>
+                    <button class="app-btn mr-1"
+                            onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
+                        편집
+                    </button>
+                    <button class="app-btn color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
+                </div>
+            </div>
         </div>
-        <div class="col-12">
-            {{ meeting.meet_desc }}
-        </div>
-        <div class="col-12 text-right">
-            <button class="app-btn app-btn-lg color-gray mr-2" onclick="location.href='{% url 'main' %}'">목록</button>
-            <button class="app-btn app-btn-lg"
-                    onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
-                회의록 수정
-            </button>
-        </div>
+        <div class="row">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title"><i class="fa fa-bookmark mr-2"></i>주제</h3>
+                        {{ meeting.meet_desc }}
+                    </div>
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title"><i class="fa fa-list mr-2"></i>내용</h3>
+                        {{ meeting.meet_contents|safe }}
+                    </div>
+                </div><!-- row -->
+            </div><!-- col -->
+            <div class="col-3 app-schedule-aside">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title"><i class="fa fa-users mr-2"></i>참가자</h3>
+                        {{ meeting.participants }}
+                    </div>
+                </div><!-- row -->
+            </div>
+        </div><!-- row -->
+    </div>
+    <div class="row">
+        <hr class="col-12"/>
     </div>
     <div class="app-comment-head">
         <h4><i class="fa fa-comment-alt mr-2"></i>댓글</h4>
@@ -43,7 +68,7 @@
                 <div class="col-md-9">{{ comment.created_date }}</div>
                 <div class="row date">
                     <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
-                    <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제</button>
+                    <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-comment-delete" type="button">삭제</button>
                 </div>
             </div>
         {% empty %}
@@ -51,7 +76,28 @@
         {% endfor %}
     </div>
 {% endblock content %}
-
 {% block script %}
+    <script type="text/javascript">
+        const commentDelete = document.querySelectorAll('.btn-comment-delete');
+        const xhr = new XMLHttpRequest();
+
+        if (commentDelete != null) {
+            Array.from(commentDelete).forEach(function(el) {
+                el.onclick = function() {
+                    xhr.onload = function() {
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            console.log(xhr.responseText);
+                        }
+                    };
+                    xhr.open('POST', '{% url 'comment_delete' %}');
+                    xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                    addCsrfToken(xhr);
+                    xhr.send(JSON.stringify({
+                        'pk': el.getAttribute('data-id'),
+                    }));
+                }
+            });
+        }
+    </script>
 {% endblock %}
 
