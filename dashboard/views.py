@@ -96,7 +96,7 @@ class RegisterView(View):
             return render(request, 'registration/register.html', {'form': form})
 
 
-class MeetingDetailView(View):
+class MeetingEditView(View):
     @staticmethod
     def get(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
@@ -105,7 +105,7 @@ class MeetingDetailView(View):
         participants = Participants.get_all_participants()
         current_participants = Participants.get_current_participants(pk)
         print(current_participants)
-        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form,
+        return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
                                                        'comment': comment, 'participants': participants,
                                                        'current_participants': current_participants})
 
@@ -144,7 +144,7 @@ class MeetingDetailView(View):
             comment.meet_schedule = meeting
             comment.author = request.user
             comment.save()
-            return redirect('meeting_detail', pk=meeting.pk)
+            return redirect('meeting_edit', pk=meeting.pk)
         else:
             print('실패')
             # comment_id = request.POST.get('pk')
@@ -159,7 +159,7 @@ class MeetingDetailView(View):
             #     context = {'message': message, 'success': success}
             #     return HttpResponse(json.dumps(context))
 
-        return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form,
+        return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
                                                        'participants': participants,
                                                        'current_participants': current_participants})
 
