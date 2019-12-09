@@ -208,3 +208,17 @@ class Participants:
                 participants_json.append({'value': val[1], 'selected': 0})
 
         return participants_json
+
+
+class Comments:
+    @staticmethod
+    def delete(request):
+        print('send request')
+        print(request)
+
+        json_data = json.loads(request.body)
+        comment_id = json_data['pk']
+
+        message = ''
+        context = {'success': message}
+        return HttpResponse(json.dumps(context), content_type='application/json')
