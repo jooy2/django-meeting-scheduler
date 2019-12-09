@@ -217,6 +217,10 @@ label {
     color: #656565;
 }
 
+.app-comment-head h4 {
+    color: #616161;
+}
+
 .app-schedule-body {
     width: 100%;
 }
