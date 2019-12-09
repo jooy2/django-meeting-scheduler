@@ -19,6 +19,8 @@ class Meeting(summer_model.Attachment):
     meet_contents = summer_fields.SummernoteTextField(default='')
     created_date = models.DateTimeField(default=timezone.now)
     progress = models.BooleanField(default=False)
+    file1 = models.FileField(blank=True, null=True, upload_to='files/%Y/%m/%d')  # 첨부파일
+    file2 = models.FileField(blank=True, null=True, upload_to='files/%Y/%m/%d')
 
 
 class Comment(models.Model):

@@ -16,13 +16,17 @@ class MeetingAddForm(forms.ModelForm):
                                                                              'max-height: 200px;'}))
     participants = forms.CharField(widget=forms.SelectMultiple(attrs={'class': 'form-control choices'}), required=False)
     meet_contents = summer_fields.SummernoteTextFormField(label='', widget=forms.TextInput(), required=False, error_messages={'required': (u'내용을 입력해주세요'), })
+    file1 = forms.FileField(label='첨부파일1', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+    file2 = forms.FileField(label='첨부파일2', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
 
     class Meta:
         model = Meeting
-        fields = ('meet_date', 'meet_title', 'meet_desc', 'participants', 'meet_contents')
+        fields = ('meet_date', 'meet_title', 'meet_desc', 'participants', 'meet_contents', 'file1', 'file2')
 
     def __init__(self, *args, **kwargs):
         super(MeetingAddForm, self).__init__(*args, **kwargs)
+        self.fields['file1'].required = False
+        self.fields['file2'].required = False
 
 
 class CommentForm(forms.ModelForm):

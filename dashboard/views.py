@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
@@ -113,17 +114,21 @@ class MeetingDetailView(View):
     @login_required
     def post(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
-        form = MeetingAddForm(request.POST, instance=meeting)
+        form = MeetingAddForm(request.POST, request.FILES, instance=meeting)
         comment = CommentForm(request.POST)
+        files = request.FILES.getlist('file_field')
 
         if form.is_valid():
-            print('meeting 성공')
             participants = request.POST.getlist('participants')
             all_user = User.objects.values_list('id', 'nickname')
 
             meet_schedule = form.save(commit=False)
             meet_schedule.proponent = request.user
+            for file in files:
+                a = getattr(meet_schedule, file)
+                os.system('chmod 777 {}'.format(a.path))
             meet_schedule.save()
+            print('meeting 성공')
 
             if participants:
                 for x in participants:
