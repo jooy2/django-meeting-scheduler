@@ -26,12 +26,11 @@ class MeetingAddForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    author = forms.CharField(label='닉네임', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '닉네임', 'aria-label': '닉네임'}), required=True)
     text = forms.CharField(label='내용', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '내용', 'aria-label': '내용'}), required=True)
 
     class Meta:
         model = Comment
-        fields = ('author', 'text',)
+        fields = ('text',)
 
 
 class LoginForm(AuthenticationForm):

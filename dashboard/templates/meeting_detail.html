@@ -38,10 +38,7 @@
     </div><hr>
      <form method="POST" class="comment-form">{% csrf_token %}
         <div class="row">
-            <div class="col-md-2 comment-form">
-                {{ comment.author }}
-            </div>
-            <div class="comment-box col-md-9">
+            <div class="comment-box col-md-11">
                 {{ comment.text }}
             </div>
             <button type="submit" class="save btn btn-default">추가</button>
@@ -49,7 +46,7 @@
     </form>
     {% for comment in meeting.comments.all %}
         <div class="comment row">
-            <div class="col-md-9">{{ comment.created_date }}</div>
+            <div class="col-md-12">{{ comment.created_date }}</div>
             <div class="row date">
                 <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
                 <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-delete" type="button">삭제</button>

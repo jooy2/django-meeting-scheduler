@@ -135,20 +135,21 @@ class MeetingDetailView(View):
             print('comment 성공')
             comment = comment.save(commit=False)
             comment.meet_schedule = meeting
+            comment.author = request.user
             comment.save()
             return redirect('meeting_detail', pk=meeting.pk)
         else:
-            print('댓글삭제')
-            comment_id = request.POST.get('pk')
-            comment = Comment.objects.filter(id=comment_id).values_list(flat=True).distinct()
-            clist = list(comment)
-            print(clist[-1])
-            if clist[-1] == comment_id:
-                comment = get_object_or_404(Comment, pk=comment_id)
-                comment.delete()
-                success = True
-                message = '댓글이 삭제 되었습니다.'
-                context = {'message': message, 'success': success}
-                return HttpResponse(json.dumps(context))
+            print('실패')
+            # comment_id = request.POST.get('pk')
+            # comment = Comment.objects.filter(id=comment_id).values_list(flat=True).distinct()
+            # clist = list(comment)
+            # print(clist[-1])
+            # if clist[-1] == comment_id:
+            #     comment = get_object_or_404(Comment, pk=comment_id)
+            #     comment.delete()
+            #     success = True
+            #     message = '댓글이 삭제 되었습니다.'
+            #     context = {'message': message, 'success': success}
+            #     return HttpResponse(json.dumps(context))
 
         return render(request, 'meeting_detail.html', {'meeting': meeting, 'form': form})

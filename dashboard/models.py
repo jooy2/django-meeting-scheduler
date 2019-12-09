@@ -23,7 +23,7 @@ class Meeting(summer_model.Attachment):
 
 class Comment(models.Model):
     meet_schedule = models.ForeignKey('Meeting', on_delete=models.CASCADE, related_name='comments')
-    author = models.CharField(max_length=20)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='author')
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
 
