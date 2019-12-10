@@ -30,7 +30,9 @@ class MeetingAddForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(label='내용', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': '내용', 'aria-label': '내용'}), required=True)
+    text = forms.CharField(label='내용', widget=forms.Textarea(
+        attrs={'class': 'form-control comment-input', 'placeholder': '내용', 'aria-label': '내용'}
+    ), required=True)
 
     class Meta:
         model = Comment
@@ -41,19 +43,33 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
 
-    username = forms.CharField(label='계정명', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(label='비밀번호', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(label='계정명',widget=forms.TextInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter username'}
+    ))
+    password = forms.CharField(label='비밀번호', widget=forms.PasswordInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter password'}
+    ))
 
 
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
 
-    username = forms.CharField(label='계정명', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password1 = forms.CharField(label='비밀번호', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(label='비밀번호 재입력', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(label='이메일', required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    nickname = forms.CharField(label='별명', required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(label='계정명', widget=forms.TextInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter username'}
+    ))
+    password1 = forms.CharField(label='비밀번호', widget=forms.PasswordInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter password'}
+    ))
+    password2 = forms.CharField(label='비밀번호 재입력', widget=forms.PasswordInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter password again'}
+    ))
+    email = forms.EmailField(label='이메일', required=True, widget=forms.EmailInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter email address'}
+    ))
+    nickname = forms.CharField(label='별명', required=True, widget=forms.TextInput(
+        attrs={'class': 'form-control form-control-lg', 'placeholder': 'Enter display nickname'}
+    ))
 
     class Meta:
         model = get_user_model()
