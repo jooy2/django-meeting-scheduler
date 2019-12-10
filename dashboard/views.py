@@ -101,10 +101,12 @@ class MeetingDetailView(View):
     def get(request, pk):
         meeting = get_object_or_404(Meeting, pk=pk)
         comment_form = CommentForm()
+        contents = Meeting.objects.get(attachment_ptr_id=pk)
 
         return render(request, 'meeting_detail.html', {
             'meeting': meeting,
-            'comment': comment_form
+            'comment': comment_form,
+            'contents': contents
         })
 
     @staticmethod
@@ -204,13 +206,14 @@ class Comments:
     def delete(request):
         print('send request')
         print(request)
+        message = ''
         if request.method == "POST":
             json_data = json.loads(request.body)
             comment_id = json_data['pk']
             comment = get_object_or_404(Comment, pk=comment_id)
             if comment.author.pk == request.user.pk:
                 comment.delete()
-                message = 'success'
+                message = 'removed'
             else:
                 message = 'fail'
         context = {'success': message}
