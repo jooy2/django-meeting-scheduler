@@ -8,37 +8,44 @@
 
 {% block content %}
     <div class="app-schedule-body">
-        <div class="row">
-            <div class="col-12">
+        <div class="row mb-4">
+            <div class="col-8">
                 <h2 class="app-schedule-title">{{ meeting.meet_title }}</h2>
-                <p class="app-schedule-meta"><i class="fa fa-clock mr-2"></i>{{ meeting.meet_date }}</p>
-                <p class="app-schedule-meta"><i class="fa fa-user-alt mr-2"></i>{{ meeting.proponent }}이 제안함</p>
-                <div>
-                    <button class="app-btn mr-1"
-                            onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
-                        편집
-                    </button>
-                    <button class="app-btn color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
-                </div>
+            </div>
+            <div class="col-4 text-right align-self-center">
+                <button class="app-btn app-btn-lg mr-1"
+                        onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
+                    편집
+                </button>
+                <button class="app-btn app-btn-lg color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
             </div>
         </div>
         <div class="row">
             <div class="col-9">
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="app-schedule-sub-title"><i class="fa fa-bookmark mr-2"></i>주제</h3>
+                        <h3 class="app-schedule-sub-title no-margin"><i class="fa fa-bookmark mr-2"></i>주제</h3>
                         {{ meeting.meet_desc }}
                     </div>
                     <div class="col-12">
                         <h3 class="app-schedule-sub-title"><i class="fa fa-list mr-2"></i>내용</h3>
-                        {{ meeting.meet_contents|safe }}
+                        <div class="app-schedule-text">{{ meeting.meet_contents|safe }}</div>
+                    </div>
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title"><i class="fa fa-file mr-2"></i>첨부파일</h3>
+                        <p><a href="/media/{{ meeting.file1|safe }}">{{ meeting.file1|safe }}</a></p>
+                        <p><a href="/media/{{ meeting.file2|safe }}">{{ meeting.file2|safe }}</a></p>
                     </div>
                 </div><!-- row -->
             </div><!-- col -->
             <div class="col-3 app-schedule-aside">
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="app-schedule-sub-title"><i class="fa fa-users mr-2"></i>참가자</h3>
+                        <p class="app-schedule-meta"><i class="fa fa-clock mr-2"></i>{{ meeting.meet_date }}</p>
+                        <p class="app-schedule-meta"><i class="fa fa-user-alt mr-2"></i>{{ meeting.proponent }}이(가) 제안함</p>
+                    </div>
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title no-margin"><i class="fa fa-users mr-2"></i>참가자</h3>
                         {{ meeting.participants }}
                     </div>
                 </div><!-- row -->
@@ -49,26 +56,32 @@
         <hr class="col-12"/>
     </div>
     <div class="app-comment-head">
-        <h4><i class="fa fa-comment-alt mr-2"></i>댓글</h4>
+        <h4><i class="fa fa-comment-alt mr-2"></i>댓글 ({{ meeting.comments.count }})</h4>
     </div>
     <div class="app-comment-body">
          <form method="POST" class="comment-form">{% csrf_token %}
             <div class="row">
-                <div class="col-md-2 comment-form">
+                <div class="d-none">
                     {{ comment.author }}
                 </div>
-                <div class="comment-box col-md-9">
+                <div class="comment-box col-12">
                     {{ comment.text }}
                 </div>
-                <button type="submit" class="save btn btn-default">추가</button>
+                <div class="col-12 mt-2">
+                    <button type="submit" class="app-btn">댓글 등록</button>
+                </div>
             </div>
         </form>
         {% for comment in meeting.comments.all %}
-            <div class="comment row">
-                <div class="col-md-9">{{ comment.created_date }}</div>
-                <div class="row date">
-                    <p><strong>{{ comment.author }}</strong> : {{ comment.text }}</p>
-                    <button data-id="{{ comment.id }}" class="btn btn-outline-secondary btn-comment-delete" type="button">삭제</button>
+            <div class="app-comment-item">
+                <div>
+                    <strong class="mr-2"><i class="fa fa-user-circle mr-2"></i>{{ comment.author }}</strong>{{ comment.created_date }}
+                </div>
+                <div class="comment-text">
+                    {{ comment.text }}
+                </div>
+                <div>
+                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제</button>
                 </div>
             </div>
         {% empty %}

@@ -67,6 +67,14 @@ label {
 }
 
 
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
 .app-form {
     border: 1px solid #f7f7f7;
     border-radius: 30px;
@@ -233,6 +241,9 @@ label {
 .app-schedule-sub-title {
     margin-top: 60px;
     color: #7d7d7d;
+    padding-bottom: 10px;
+    margin-bottom: 15px !important;
+    border-bottom: 1px solid #e2e2e2;
 }
 
 .app-schedule-meta {
@@ -245,15 +256,49 @@ label {
     margin-bottom: 30px !important;
 }
 
+.app-schedule-text {
+    overflow-x: scroll;
+    word-break: break-all;
+}
+
 .app-schedule-aside {
     border-radius: 10px;
+    padding: 35px 20px;
     background: #f3f3f3;
 }
 
 .app-comment-body {
     width: 100%;
+    border-radius: 10px;
+    padding: 20px 20px;
+    background: #f3f3f3;
 }
 
-.comment-box { padding: 0 0 0 15px; }
-.comment-box>textarea{ height: 80px; }
-textarea { resize: none; }
+.app-comment-body .comment-input {
+    height: 50px;
+    min-height: 50px;
+    max-height: 170px;
+    resize: vertical;
+}
+
+.app-comment-item {
+    margin: 20px 0;
+}
+
+.app-comment-item .comment-text {
+    background: white;
+    border-radius: 10px;
+    margin: 7px 0;
+    padding: 5px 15px;
+}
+
+.app-auth-area {
+    border: 1px solid #cecece;
+    padding: 40px 30px;
+    box-shadow: 1px 1px 3px #d0d0d0;
+}
+
+.app-auth-area h2 {
+    font-weight: 300;
+    color: #8e8e8e;
+}
