@@ -60,17 +60,17 @@
     </div>
     <div class="app-comment-body">
          <form method="POST" class="comment-form">{% csrf_token %}
-            <div class="row">
-                <div class="d-none">
-                    {{ comment.author }}
-                </div>
-                <div class="comment-box col-12">
-                    {{ comment.text }}
-                </div>
-                <div class="col-12 mt-2">
-                    <button type="submit" class="app-btn">댓글 등록</button>
-                </div>
-            </div>
+             <div class="row">
+                 <div class="d-none">
+                     {{ comment.author }}
+                 </div>
+                 <div class="comment-box col-12">
+                     {{ comment.text }}
+                 </div>
+                 <div class="col-12 mt-2">
+                     <button type="submit" class="app-btn">댓글 등록</button>
+                 </div>
+             </div>
         </form>
         {% for comment in meeting.comments.all %}
             <div class="app-comment-item">
@@ -99,7 +99,8 @@
                 el.onclick = function() {
                     xhr.onload = function() {
                         if (xhr.status === 200 || xhr.status === 201) {
-                            console.log(xhr.responseText);
+                            stringToJson(xhr.responseText).success === 'removed' ?
+                                el.parentNode.parentNode.remove() : alert('문제가 발생하였습니다.');
                         }
                     };
                     xhr.open('POST', '{% url 'comment_delete' %}');

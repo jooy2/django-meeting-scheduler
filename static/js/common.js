@@ -62,3 +62,7 @@ function csrfSafeMethod(method) {
 const addCsrfToken = function(xhr) {
     xhr.setRequestHeader("X-CSRFToken", csrfToken);
 };
+
+const stringToJson = function(str) {
+    return eval("(" + str + ")");
+};
