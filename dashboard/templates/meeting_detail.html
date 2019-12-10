@@ -61,7 +61,7 @@
         <hr class="col-12"/>
     </div>
     <div class="app-comment-head">
-        <h4><i class="fa fa-comment-alt mr-2"></i>댓글 ({{ meeting.comments.count }})</h4>
+        <h4><i class="fa fa-comment-alt mr-2"></i>댓글 (<span id="comment-count">{{ meeting.comments.count }}</span>)</h4>
     </div>
     <div class="app-comment-body">
         <form method="POST" class="comment-form">{% csrf_token %}
@@ -106,8 +106,13 @@
                 el.onclick = function () {
                     xhr.onload = function () {
                         if (xhr.status === 200 || xhr.status === 201) {
-                            stringToJson(xhr.responseText).success === 'removed' ?
-                                el.parentNode.parentNode.remove() : alert('문제가 발생하였습니다.');
+                            if (stringToJson(xhr.responseText).success === 'removed') {
+                                el.parentNode.parentNode.remove();
+                                let countEl = document.getElementById('comment-count');
+                                countEl.innerHTML = (Number(countEl.innerHTML) - 1).toString();
+                            } else {
+                                alert('문제가 발생하였습니다.');
+                            }
                         }
                     };
                     xhr.open('POST', '{% url 'comment_delete' %}');
