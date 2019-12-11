@@ -17,7 +17,7 @@
                         onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
                     편집
                 </button>
-                <button class="app-btn app-btn-lg color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
+                <button class="app-btn app-btn-lg bg-color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
             </div>
         </div>
         <div class="row">
@@ -92,7 +92,7 @@
                     {{ comment.text }}
                 </div>
                 <div>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제
+                    <button data-id="{{ comment.id }}" class="app-btn bg-color-gray btn-comment-delete" type="button">삭제
                     </button>
                 </div>
             </div>
@@ -130,5 +130,5 @@
             });
         }
     </script>
-{% endblock %}
+{% endblock script %}
 

@@ -21,11 +21,13 @@ class MainView(LoginRequiredMixin, View):
         participants = Participants.get_all_participants()
         date_array = MeetingSchedule.get_after_7_days()
         schedule_json = MeetingSchedule.get_weekly_schedule(request)
+        schedule_all = MeetingSchedule.get_all_schedule()
 
         return render(request, 'main.html', {
             'form': form,
             'participants': participants,
             'schedule': schedule_json,
+            'schedule_all': schedule_all,
             'all_date': date_array,
         })
 
@@ -209,12 +211,22 @@ class MeetingSchedule:
                 else:
                     joined = '0'
 
+                if data.progress:
+                    progress = '1'
+                else:
+                    progress = '0'
+
                 schedule_json[data.id] = ({
                     'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
+                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined, 'schedule_ended': progress,
                 })
 
         return schedule_json
+
+    @staticmethod
+    def get_all_schedule():
+        schedule = Meeting.objects.all().order_by('-id')[:15]
+        return schedule
 
 
 class Comments:

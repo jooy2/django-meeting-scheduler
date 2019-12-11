@@ -1,8 +1,11 @@
 {% block content %}
     <div class="app-weekly-feed">
-        <div class="app-weekly-toolbar text-right">
-            <div id="btn-only-me" data-active="false" class="toolbar-item">
-                <i class="fa fa-circle"></i>내가 포함된 일정만 보기
+        <div class="app-weekly-toolbar row no-gutters">
+            <div class="col-9 color-gray">
+                <span id="schedule-count" class="font-weight-bold"></span> 개의 주간 회의
+            </div>
+            <div id="btn-only-me" data-active="false" class="toolbar-item col-3 text-right">
+                내가 포함된 일정만 보기<i class="fa fa-circle ml-2"></i>
             </div>
         </div>
         <div class="app-weekly-body">
@@ -19,22 +22,31 @@
 {% block script %}
     <script type="text/javascript">
         const jsonData = {{ schedule|safe }};
+        let scheduleCount = 0;
+        let ended, expired, joined = "";
 
         for (let key in jsonData) {
             let data = jsonData[key];
             let url = "{% url 'meeting_detail' pk=123 %}".replace('123', data.id);
-            let ended = "";
+            ended = "";
+            expired = "";
+            joined = "";
 
-            if (data.time_expired === "1") ended = "time-ended";
+            if (data.time_expired === "1") expired = "time-ended";
+            if (data.joined === "1") joined = "<i class='fa fa-star mr-1 color-yellow'></i>";
+            if (data.schedule_ended === "1") ended = "<i class='fa fa-check-circle mr-1 color-green'></i>";
 
             let htmlData =
                 "<div data-joined='"+data.joined+"' onclick='location.href=\"" + url + "\"' " +
-                "class='schedule-item " + ended + "'>" +
+                "class='schedule-item " + expired + "'>" + joined + ended +
                     "<span class='time'>" + data.time + "</span>" +
-                    stringLimit(data.title, 15) +
+                    stringLimit(data.title, 40) +
                 "</div>";
             document.getElementById('schedule-' + data.date).innerHTML += htmlData;
+            scheduleCount++;
         }
+
+        document.getElementById('schedule-count').innerHTML = scheduleCount.toString();
 
         document.getElementById('btn-only-me').onclick = function() {
             showAllSchedule();
@@ -70,5 +82,5 @@
             }
         }
     </script>
-{% endblock %}
+{% endblock script %}
 
