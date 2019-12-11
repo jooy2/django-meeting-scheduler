@@ -18,36 +18,9 @@ class MainView(LoginRequiredMixin, View):
     @staticmethod
     def get(request):
         form = MeetingAddForm
-        schedule_json = {}
-        date_array = []
-        date_now = datetime.datetime.now()
         participants = Participants.get_all_participants()
-                
-        # get schedule 7 days
-        for current_days in range(0, 7):
-            current_date = date_now + datetime.timedelta(days=current_days)
-            current_date_format = current_date.strftime('%Y-%m-%d')
-            date_array.append(current_date)
-
-            schedule_data = Meeting.objects.filter(
-                meet_date__contains=datetime.date(current_date.year, current_date.month, current_date.day)
-            )
-
-            for data in schedule_data:
-                if date_now >= data.meet_date:
-                    date_over = '1'
-                else:
-                    date_over = '0'
-
-                if data.participants.filter(id=request.user.id):
-                    joined = '1'
-                else:
-                    joined = '0'
-
-                schedule_json[data.id] = ({
-                    'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
-                })
+        date_array = MeetingSchedule.get_after_7_days()
+        schedule_json = MeetingSchedule.get_weekly_schedule(request)
 
         return render(request, 'main.html', {
             'form': form,
@@ -85,7 +58,7 @@ class RegisterView(View):
         return render(request, 'registration/register.html', {'form': form})
 
     @staticmethod
-    def post(request, pk):
+    def post(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
@@ -102,11 +75,13 @@ class MeetingDetailView(View):
         meeting = get_object_or_404(Meeting, pk=pk)
         comment_form = CommentForm()
         contents = Meeting.objects.get(attachment_ptr_id=pk)
+        participants = Participants.get_current_participants(pk)
 
         return render(request, 'meeting_detail.html', {
             'meeting': meeting,
             'comment': comment_form,
-            'contents': contents
+            'contents': contents,
+            'participants': participants,
         })
 
     @staticmethod
@@ -115,7 +90,6 @@ class MeetingDetailView(View):
         comment = CommentForm(request.POST)
 
         if comment.is_valid():
-            print('comment 성공')
             comment = comment.save(commit=False)
             comment.meet_schedule = meeting
             comment.author = request.user
@@ -154,7 +128,6 @@ class MeetingEditView(View):
                 a = getattr(meet_schedule, file)
                 os.system('chmod 777 {}'.format(a.path))
             meet_schedule.save()
-            print('meeting 성공')
 
             meet_schedule.participants.remove(*meet_schedule.participants.all())
 
@@ -163,8 +136,6 @@ class MeetingEditView(View):
                 for y in participant_id:
                     meet_schedule.participants.add(y)
             return redirect('main')
-        else:
-            print('실패')
 
         return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
                                                        'participants': participants,
@@ -201,11 +172,54 @@ class Participants:
         return participants_json
 
 
+class MeetingSchedule:
+    @staticmethod
+    def get_after_7_days():
+        date_array = []
+        date_now = datetime.datetime.now()
+
+        for current_days in range(0, 7):
+            current_date = date_now + datetime.timedelta(days=current_days)
+            date_array.append(current_date)
+
+        return date_array
+
+    @staticmethod
+    def get_weekly_schedule(request):
+        schedule_json = {}
+        date_now = datetime.datetime.now()
+
+        # get schedule 7 days
+        for current_days in range(0, 7):
+            current_date = date_now + datetime.timedelta(days=current_days)
+            current_date_format = current_date.strftime('%Y-%m-%d')
+
+            schedule_data = Meeting.objects.filter(
+                meet_date__contains=datetime.date(current_date.year, current_date.month, current_date.day)
+            )
+
+            for data in schedule_data:
+                if date_now >= data.meet_date:
+                    date_over = '1'
+                else:
+                    date_over = '0'
+
+                if data.participants.filter(id=request.user.id):
+                    joined = '1'
+                else:
+                    joined = '0'
+
+                schedule_json[data.id] = ({
+                    'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
+                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
+                })
+
+        return schedule_json
+
+
 class Comments:
     @staticmethod
     def delete(request):
-        print('send request')
-        print(request)
         message = ''
         if request.method == "POST":
             json_data = json.loads(request.body)
