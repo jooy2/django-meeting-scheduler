@@ -33,6 +33,9 @@
                     </div>
                     <div class="col-12">
                         <h3 class="app-schedule-sub-title"><i class="fa fa-file mr-2"></i>첨부파일</h3>
+                        {% if not contents.file1 and not contents.file2 %}
+                            <p>첨부파일이 없습니다</p>
+                        {% endif %}
                         {% if contents.file1 %}
                             <p><a href='/media/{{ contents.file1 }}'>< {{ contents.file1|filename }} > 다운로드</a></p>
                         {% endif %}
