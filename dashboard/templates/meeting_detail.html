@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load filename %}
+{% block head %}
+    <title>Meet Scheduler</title>
+{% endblock head %}
+
+{% block title %}Meet Scheduler{% endblock title %}
+
+{% block content %}
+    <div class="app-schedule-body">
+        <div class="row mb-4">
+            <div class="col-8">
+                <h2 class="app-schedule-title">{{ meeting.meet_title }}</h2>
+            </div>
+            <div class="col-4 text-right align-self-center">
+                <button class="app-btn app-btn-lg mr-1"
+                        onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
+                    편집
+                </button>
+                <button class="app-btn app-btn-lg color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title no-margin"><i class="fa fa-bookmark mr-2"></i>주제</h3>
+                        {{ meeting.meet_desc }}
+                    </div>
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title"><i class="fa fa-list mr-2"></i>내용</h3>
+                        <div class="app-schedule-text">{{ meeting.meet_contents|safe }}</div>
+                    </div>
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title"><i class="fa fa-file mr-2"></i>첨부파일</h3>
+                        {% if contents.file1 %}
+                            <p><a href='/media/{{ contents.file1 }}'>< {{ contents.file1|filename }} > 다운로드</a></p>
+                        {% endif %}
+                        {% if contents.file2 %}
+                            <p><a href='/media/{{ contents.file2 }}'>< {{ contents.file2|filename }} > 다운로드</a></p>
+                        {% endif %}
+                    </div>
+                </div><!-- row -->
+            </div><!-- col -->
+            <div class="col-3 app-schedule-aside">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="app-schedule-meta"><i class="fa fa-clock mr-2"></i>{{ meeting.meet_date }}</p>
+                        <p class="app-schedule-meta"><i class="fa fa-user-alt mr-2"></i>{{ meeting.proponent }}이(가) 제안함
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <h3 class="app-schedule-sub-title no-margin"><i class="fa fa-users mr-2"></i>참가자</h3>
+                        {{ meeting.participants }}
+                    </div>
+                </div><!-- row -->
+            </div>
+        </div><!-- row -->
+    </div>
+    <div class="row">
+        <hr class="col-12"/>
+    </div>
+    <div class="app-comment-head">
+        <h4><i class="fa fa-comment-alt mr-2"></i>댓글 (<span id="comment-count">{{ meeting.comments.count }}</span>)</h4>
+    </div>
+    <div class="app-comment-body">
+        <form method="POST" class="comment-form">{% csrf_token %}
+            <div class="row">
+                <div class="d-none">
+                    {{ comment.author }}
+                </div>
+                <div class="comment-box col-12">
+                    {{ comment.text }}
+                </div>
+                <div class="col-12 mt-2">
+                    <button type="submit" class="app-btn">댓글 등록</button>
+                </div>
+            </div>
+        </form>
+        {% for comment in meeting.comments.all %}
+            <div class="app-comment-item">
+                <div>
+                    <strong class="mr-2"><i class="fa fa-user-circle mr-2"></i>{{ comment.author }}
+                    </strong>{{ comment.created_date }}
+                </div>
+                <div class="comment-text">
+                    {{ comment.text }}
+                </div>
+                <div>
+                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <p>댓글이 없습니다</p>
+        {% endfor %}
+    </div>
+{% endblock content %}
+{% block script %}
+    <script type="text/javascript">
+        const commentDelete = document.querySelectorAll('.btn-comment-delete');
+        const xhr = new XMLHttpRequest();
+
+        if (commentDelete != null) {
+            Array.from(commentDelete).forEach(function (el) {
+                el.onclick = function () {
+                    xhr.onload = function () {
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            if (stringToJson(xhr.responseText).success === 'removed') {
+                                el.parentNode.parentNode.remove();
+                                let countEl = document.getElementById('comment-count');
+                                countEl.innerHTML = (Number(countEl.innerHTML) - 1).toString();
+                            } else {
+                                alert('문제가 발생하였습니다.');
+                            }
+                        }
+                    };
+                    xhr.open('POST', '{% url 'comment_delete' %}');
+                    xhr.setRequestHeader('Content-Type', 'application/json;');
+                    addCsrfToken(xhr);
+                    xhr.send(JSON.stringify({
+                        'pk': el.getAttribute('data-id'),
+                    }));
+                }
+            });
+        }
+    </script>
+{% endblock %}
+

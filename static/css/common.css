@@ -1,0 +1,304 @@
+/* Common stylesheet */
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+label {
+    padding-left: 10px;
+    margin: 0;
+}
+
+.navbar {
+    height: 48px;
+    box-shadow: 0 1px 2px #003873;
+}
+
+.content-wrapper {
+    flex: 1 0 0;
+    margin-top: 56px;
+}
+
+.container > div {
+    margin: 20px 0;
+}
+
+.footer {
+    background: #e8e8e8;
+    color: #858585;
+    text-align: center;
+    font-weight: 400;
+    font-size: 0.9em;
+    width: 100%;
+    left: 0;
+    right: 0;
+    padding: 40px 30px;
+    margin-top: 70px;
+}
+
+.ml-auto .dropdown-menu {
+    left: auto !important;
+    right: 0;
+} /* bootstrap 4 right menu fix */
+
+
+/* tingle fix */
+.tingle-enabled {
+    overflow: hidden !important;
+    overflow-y: scroll !important;
+}
+
+.tingle-modal {
+    top: 48px;
+}
+
+.tingle-modal--visible {
+    opacity: 1 !important;
+}
+
+.tingle-modal__close {
+    top: 5rem !important;
+}
+
+.tingle-modal--visible .tingle-modal-box__footer {
+    text-align: right !important;
+}
+
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.app-form {
+    border: 1px solid #f7f7f7;
+    border-radius: 30px;
+    padding: 6px 20px;
+    font-size: 0.85em;
+    color: #636363;
+    height: 32px;
+}
+
+.app-form:focus {
+    outline: 0;
+}
+
+.app-form-label {
+    color: #848484;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.app-btn {
+    cursor: pointer;
+    border: none;
+    border-radius: 30px;
+    padding: 6px 10px;
+    font-size: 0.85em;
+    background: #0055b1;
+    color: white;
+    height: 32px;
+    user-select: none;
+}
+
+.app-btn:hover {
+    opacity: 0.8;
+}
+
+.app-btn:focus {
+    outline: 0;
+}
+
+.app-btn-lg {
+    height: 48px !important;
+    padding: 0 40px !important;
+}
+
+.app-weekly-feed {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #cccccc;
+    padding: 10px 15px;
+    background: #fbfbfb;
+    user-select: none;
+}
+
+.app-weekly-toolbar .toolbar-item {
+    background: #e6e6e6;
+    color: #7d7d7d;
+    font-size: 0.85em;
+    padding: 5px 15px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.app-weekly-toolbar .toolbar-item.active {
+    background: #329e58;
+    color: #cdf7dc;
+}
+
+.app-weekly-toolbar .toolbar-item i {
+    margin-right: 6px;
+}
+
+.app-weekly-body {
+    color: #676767;
+    height: 100%;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.app-weekly-body .date-row {
+    height: 100%;
+    padding: 4px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.app-weekly-body .date-row:last-child {
+    border-bottom: 0;
+}
+
+.app-weekly-body .day {
+    background: #34679e;
+    color: white;
+    padding: 5px 0;
+    width: 10%;
+    height: 100%;
+    display: inline-block;
+    border-radius: 20px;
+}
+
+.app-weekly-body .schedule {
+    width: 89%;
+    height: 100%;
+    display: inline-flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.app-weekly-body .schedule span:hover, .app-weekly-body .schedule div:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.app-weekly-body .schedule-item {
+    background: #efefef;
+    color: #757575;
+    margin: 0 4px;
+    vertical-align: middle;
+    text-align: left;
+    padding: 4px 6px;
+    border-radius: 20px;
+    min-width: 200px;
+}
+
+.app-weekly-body .schedule-item .time {
+    background: #488cd6;
+    color: white;
+    font-size: 0.9em;
+    padding: 3px 5px;
+    border-radius: 10px;
+    margin-right: 8px;
+}
+
+.app-weekly-body .time-ended {
+    opacity: 0.3 !important;
+}
+
+.app-weekly-body .time-ended .time {
+    background: #9c2a2a;
+}
+
+.app-weekly-body .time-ended:hover {
+    opacity: 0.5 !important;
+}
+
+.color-gray {
+    background: #dedede;
+    color: #656565;
+}
+
+.app-comment-head h4 {
+    color: #616161;
+}
+
+.app-schedule-body {
+    width: 100%;
+}
+
+.app-schedule-title {
+    font-size: 3.3em;
+    color: #656565;
+}
+
+.app-schedule-sub-title {
+    margin-top: 60px;
+    color: #7d7d7d;
+    padding-bottom: 10px;
+    margin-bottom: 15px !important;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.app-schedule-meta {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 0.9em;
+}
+
+.app-schedule-meta:last-child {
+    margin-bottom: 30px !important;
+}
+
+.app-schedule-text {
+    overflow-x: auto;
+    word-break: break-all;
+}
+
+.app-schedule-aside {
+    border-radius: 10px;
+    padding: 35px 20px;
+    background: #f3f3f3;
+}
+
+.app-comment-body {
+    width: 100%;
+    border-radius: 10px;
+    padding: 20px 20px;
+    background: #f3f3f3;
+}
+
+.app-comment-body .comment-input {
+    height: 50px;
+    min-height: 50px;
+    max-height: 170px;
+    resize: vertical;
+}
+
+.app-comment-item {
+    margin: 20px 0;
+}
+
+.app-comment-item .comment-text {
+    background: white;
+    border-radius: 10px;
+    margin: 7px 0;
+    padding: 5px 15px;
+}
+
+.app-auth-area {
+    border: 1px solid #cecece;
+    padding: 40px 30px;
+    box-shadow: 1px 1px 3px #d0d0d0;
+}
+
+.app-auth-area h2 {
+    font-weight: 300;
+    color: #8e8e8e;
+}

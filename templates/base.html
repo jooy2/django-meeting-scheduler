@@ -1,0 +1,71 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"/>
+    <meta name="canonical" content=""/>
+    <meta name="author" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/fontawesome-all.css">
+    <link rel="stylesheet" href="/static/css/tingle.min.css">
+    <link rel="stylesheet" href="/static/css/choices.min.css">
+    <script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/common.js"></script>
+    <script type="text/javascript" src="/static/js/tingle.min.js"></script>
+    <script type="text/javascript" src="/static/js/choices.min.js"></script>
+    <noscript>JavaScript가 차단되었습니다.</noscript>
+    {% block head %}
+    {% endblock head %}
+</head>
+<body>
+    <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-primary">
+        <a class="navbar-brand" href="{% url 'main' %}">Scheduler</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-5 mr-auto">
+                <li class="nav-item">
+                    <form method="post" class="form-inline">
+                        {% csrf_token %}
+                        <input class="app-form app-form-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="app-btn my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'main' %}"><i class="fa fa-calendar-alt pr-2"></i>일정</a>
+                </li>
+                <li class="nav-item {% if request.path == '/settings' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'main' %}"><i class="fa fa-cogs"></i></a>
+                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item {% if request.path == '/accounts' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'login' %}"><i class="fa fa-user-alt-slash"></i></a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% block title %}
+    {% endblock title %}
+    <div class="container content-wrapper">
+        {% block content %}
+        {% endblock content %}
+    </div>
+    <div class="footer">
+        <p>meet scheduler</p>
+    </div>
+    {% block script %}
+    {% endblock script %}
+</body>

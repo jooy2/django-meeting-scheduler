@@ -1,0 +1,74 @@
+{% block content %}
+    <div class="app-weekly-feed">
+        <div class="app-weekly-toolbar text-right">
+            <div id="btn-only-me" data-active="false" class="toolbar-item">
+                <i class="fa fa-circle"></i>내가 포함된 일정만 보기
+            </div>
+        </div>
+        <div class="app-weekly-body">
+            {% for current_date in all_date %}
+                <div class="date-row">
+                    <div id="date-{{ current_date|date:"Y-m-d" }}" class="day">{{ current_date|date:"m/d" }}</div>
+                    <div id="schedule-{{ current_date|date:"Y-m-d" }}" class="schedule"></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript">
+        const jsonData = {{ schedule|safe }};
+
+        for (let key in jsonData) {
+            let data = jsonData[key];
+            let url = "{% url 'meeting_detail' pk=123 %}".replace('123', data.id);
+            let ended = "";
+
+            if (data.time_expired === "1") ended = "time-ended";
+
+            let htmlData =
+                "<div data-joined='"+data.joined+"' onclick='location.href=\"" + url + "\"' " +
+                "class='schedule-item " + ended + "'>" +
+                    "<span class='time'>" + data.time + "</span>" +
+                    stringLimit(data.title, 15) +
+                "</div>";
+            document.getElementById('schedule-' + data.date).innerHTML += htmlData;
+        }
+
+        document.getElementById('btn-only-me').onclick = function() {
+            showAllSchedule();
+
+            if (this.getAttribute('data-active') === 'true') {
+                this.classList.remove('active');
+                this.setAttribute('data-active', 'false');
+                this.children[0].classList.add('fa-circle');
+                this.children[0].classList.remove('fa-check-circle');
+            } else {
+                this.classList.add('active');
+                this.setAttribute('data-active', 'true');
+                this.children[0].classList.remove('fa-circle');
+                this.children[0].classList.add('fa-check-circle');
+                filterSchedule();
+            }
+        };
+
+        function filterSchedule() {
+            const schedule = document.getElementsByClassName('schedule-item');
+
+            for (let i=0; i<schedule.length; i++) {
+                if (schedule[i].getAttribute('data-joined') === '0')
+                    schedule[i].classList.add('d-none');
+            }
+        }
+
+        function showAllSchedule() {
+            const schedule = document.getElementsByClassName('schedule-item');
+
+            for (let i=0; i<schedule.length; i++) {
+                schedule[i].classList.remove('d-none');
+            }
+        }
+    </script>
+{% endblock %}
+
