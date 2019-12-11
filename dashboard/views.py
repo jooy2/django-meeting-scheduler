@@ -102,11 +102,13 @@ class MeetingDetailView(View):
         meeting = get_object_or_404(Meeting, pk=pk)
         comment_form = CommentForm()
         contents = Meeting.objects.get(attachment_ptr_id=pk)
+        participants = Participants.get_current_participants(pk)
 
         return render(request, 'meeting_detail.html', {
             'meeting': meeting,
             'comment': comment_form,
-            'contents': contents
+            'contents': contents,
+            'participants': participants,
         })
 
     @staticmethod

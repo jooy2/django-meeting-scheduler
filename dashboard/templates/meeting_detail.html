@@ -51,7 +51,9 @@
                     </div>
                     <div class="col-12">
                         <h3 class="app-schedule-sub-title no-margin"><i class="fa fa-users mr-2"></i>참가자</h3>
-                        {{ meeting.participants }}
+                        {% for participant in participants %}
+                            <span class="participant-item">{{ participant.value }}</span>
+                        {% endfor %}
                     </div>
                 </div><!-- row -->
             </div>
