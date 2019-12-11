@@ -13,7 +13,7 @@
                 <tr class="schedule-item" data-id="{{ schedule.id }}">
                     <td>{{ schedule.meet_date|date:"Y-m-d l H:i" }}</td>
                     <td class="font-weight-bold">{{ schedule.meet_title }}</td>
-                    <td>{% if schedule.progress %}<i class="fa fa-check-circle"></i>{% endif %}</td>
+                    <td class="text-center color-green">{% if schedule.progress %}<i class="fa fa-check-circle"></i>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
