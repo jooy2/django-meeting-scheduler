@@ -92,8 +92,10 @@
                     {{ comment.text }}
                 </div>
                 <div>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-modify" type="button">수정</button>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제</button>
+                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-modify" type="button">수정
+                    </button>
+                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제
+                    </button>
                 </div>
             </div>
             {% empty %}
@@ -139,8 +141,35 @@
                     commentBox.innerHTML = tag1;
                     const commentText = commentBox.childNodes.item(0);
                     commentText.innerHTML = commentBox.getAttribute('value');
-                    this.parentElement.querySelector('.btn-comment-modify').classList.add('btn-modify');
-                    this.parentElement.querySelector('.btn-modify').classList.remove('btn-comment-modify');
+                    let btnModify= this.parentElement.querySelector('.btn-comment-modify');
+                    console.log(btnModify);
+                    if (btnModify) {
+                        btnModify.classList.replace('btn-comment-modify', 'btn-modify');
+                        console.log(btnModify);
+                    }
+                }
+            });
+        }
+        if (commentModify2 != null) {
+            Array.from(commentModify2).forEach(function (el) {
+                el.onclick = function () {
+                    console.log('2번째 버튼');
+                    xhr.onload = function () {
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            if (stringToJson(xhr.responseText).success === 'modify') {
+                                alert('수정성공');
+                            } else {
+                                alert('문제가 발생하였습니다.');
+                            }
+                        }
+                    };
+                    xhr.open('POST', '{% url 'comment_modify' %}');
+                    xhr.setRequestHeader('Content-Type', 'application/json;');
+                    addCsrfToken(xhr);
+                    xhr.send(JSON.stringify({
+                        'pk': el.getAttribute('data-id'),
+                        'text': el.parentElement.parentElement.querySelector('.comment-text').getAttribute('value'),
+                    }));
                 }
             });
         }
