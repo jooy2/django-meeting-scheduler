@@ -58,7 +58,7 @@ class RegisterView(View):
         return render(request, 'registration/register.html', {'form': form})
 
     @staticmethod
-    def post(request, pk):
+    def post(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
@@ -90,7 +90,6 @@ class MeetingDetailView(View):
         comment = CommentForm(request.POST)
 
         if comment.is_valid():
-            print('comment 성공')
             comment = comment.save(commit=False)
             comment.meet_schedule = meeting
             comment.author = request.user
@@ -129,7 +128,6 @@ class MeetingEditView(View):
                 a = getattr(meet_schedule, file)
                 os.system('chmod 777 {}'.format(a.path))
             meet_schedule.save()
-            print('meeting 성공')
 
             meet_schedule.participants.remove(*meet_schedule.participants.all())
 
@@ -138,8 +136,6 @@ class MeetingEditView(View):
                 for y in participant_id:
                     meet_schedule.participants.add(y)
             return redirect('main')
-        else:
-            print('실패')
 
         return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
                                                        'participants': participants,
@@ -224,8 +220,6 @@ class MeetingSchedule:
 class Comments:
     @staticmethod
     def delete(request):
-        print('send request')
-        print(request)
         message = ''
         if request.method == "POST":
             json_data = json.loads(request.body)
