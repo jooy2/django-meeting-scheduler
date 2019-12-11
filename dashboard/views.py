@@ -232,3 +232,20 @@ class Comments:
                 message = 'fail'
         context = {'success': message}
         return HttpResponse(json.dumps(context, ensure_ascii=False), content_type='application/json')
+
+    @staticmethod
+    def modify(request):
+        message = ''
+        if request.method == "POST":
+            json_data = json.loads(request.body)
+            comment_id = json_data['pk']
+            comment_text = json_data['text']
+            comment = get_object_or_404(Comment, pk=comment_id)
+            if comment.author.pk == request.user.pk:
+                comment.text = comment_text
+                comment.save()
+                message = 'modify'
+            else:
+                message = 'fail'
+        context = {'success': message}
+        return HttpResponse(json.dumps(context, ensure_ascii=False), content_type='application/json')

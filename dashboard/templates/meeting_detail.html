@@ -88,12 +88,12 @@
                     <strong class="mr-2"><i class="fa fa-user-circle mr-2"></i>{{ comment.author }}
                     </strong>{{ comment.created_date }}
                 </div>
-                <div class="comment-text">
+                <div class="comment-text" value="{{ comment.text }}">
                     {{ comment.text }}
                 </div>
                 <div>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제
-                    </button>
+                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-modify" type="button">수정</button>
+                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-delete" type="button">삭제</button>
                 </div>
             </div>
             {% empty %}
@@ -104,7 +104,10 @@
 {% block script %}
     <script type="text/javascript">
         const commentDelete = document.querySelectorAll('.btn-comment-delete');
+        const commentModify = document.querySelectorAll('.btn-comment-modify');
+        const commentModify2 = document.querySelectorAll('.btn-modify');
         const xhr = new XMLHttpRequest();
+        const tag1 = "<textarea name=\"text\" class=\"form-control comment-input\" placeholder=\"내용\" aria-label=\"내용\" required=\"\" id=\"id_text\"></textarea>";
 
         if (commentDelete != null) {
             Array.from(commentDelete).forEach(function (el) {
@@ -126,6 +129,18 @@
                     xhr.send(JSON.stringify({
                         'pk': el.getAttribute('data-id'),
                     }));
+                }
+            });
+        }
+        if (commentModify != null) {
+            Array.from(commentModify).forEach(function (el) {
+                el.onclick = function () {
+                    const commentBox = this.parentElement.parentElement.querySelector('.comment-text');
+                    commentBox.innerHTML = tag1;
+                    const commentText = commentBox.childNodes.item(0);
+                    commentText.innerHTML = commentBox.getAttribute('value');
+                    this.parentElement.querySelector('.btn-comment-modify').classList.add('btn-modify');
+                    this.parentElement.querySelector('.btn-modify').classList.remove('btn-comment-modify');
                 }
             });
         }
