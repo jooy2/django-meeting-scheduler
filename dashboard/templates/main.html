@@ -9,7 +9,7 @@
 {% block content %}
     <div class="row no-gutters">
         <div class="col-7 col-md-8 col-lg-10 align-self-center">
-            <h2 class="app-title no-margin">주간 일정</h2>
+            <h2 class="app-title no-margin"><i class="fa fa-calendar-week mr-3"></i>주간 일정</h2>
         </div>
         <div class="col-5 col-md-4 col-lg-2">
             <button id="btn-add-schedule" class="app-btn app-btn-lg bg-color-gray w-100" type="button">
@@ -23,17 +23,17 @@
         <div class="col-12 col-md-6">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="app-title">전체 회의</h2>
+                    <h2 class="app-title"><i class="fa fa-list mr-3"></i>전체 회의</h2>
                 </div>
                 <div class="col-12">
-
+                    {% include "schedule_view_list_all.html" %}
                 </div>
             </div>
         </div>
         <div class="col-12 col-md-6">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="app-title">팀원 정보</h2>
+                    <h2 class="app-title"><i class="fa fa-users mr-3"></i>팀원 정보</h2>
                 </div>
                 <div class="col-12">
 
@@ -105,5 +105,5 @@
             itemSelectText: '클릭하여 선택',
         });
     </script>
-{% endblock %}
+{% endblock script %}
 

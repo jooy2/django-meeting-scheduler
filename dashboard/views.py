@@ -21,11 +21,13 @@ class MainView(LoginRequiredMixin, View):
         participants = Participants.get_all_participants()
         date_array = MeetingSchedule.get_after_7_days()
         schedule_json = MeetingSchedule.get_weekly_schedule(request)
+        schedule_all = MeetingSchedule.get_all_schedule()
 
         return render(request, 'main.html', {
             'form': form,
             'participants': participants,
             'schedule': schedule_json,
+            'schedule_all': schedule_all,
             'all_date': date_array,
         })
 
@@ -220,6 +222,11 @@ class MeetingSchedule:
                 })
 
         return schedule_json
+
+    @staticmethod
+    def get_all_schedule():
+        schedule = Meeting.objects.all().order_by('-id')[:15]
+        return schedule
 
 
 class Comments:
