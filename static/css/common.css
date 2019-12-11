@@ -204,7 +204,7 @@ label {
     text-align: left;
     padding: 4px 6px;
     border-radius: 20px;
-    min-width: 200px;
+    min-width: 350px;
 }
 
 .app-weekly-body .schedule-item .time {
@@ -228,9 +228,17 @@ label {
     opacity: 0.5 !important;
 }
 
+.bg-color-gray {
+    background: #dedede !important;
+    color: #656565 !important;
+}
+
 .color-gray {
-    background: #dedede;
-    color: #656565;
+    color: #656565 !important;
+}
+
+.color-yellow {
+    color: #fbc709 !important;
 }
 
 .app-comment-head h4 {
@@ -314,9 +322,4 @@ label {
     border: 1px solid #cecece;
     padding: 40px 30px;
     box-shadow: 1px 1px 3px #d0d0d0;
-}
-
-.app-auth-area h2 {
-    font-weight: 300;
-    color: #8e8e8e;
 }

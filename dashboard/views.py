@@ -209,9 +209,14 @@ class MeetingSchedule:
                 else:
                     joined = '0'
 
+                if data.progress:
+                    progress = '1'
+                else:
+                    progress = '0'
+
                 schedule_json[data.id] = ({
                     'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
+                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined, 'schedule_ended': progress,
                 })
 
         return schedule_json
