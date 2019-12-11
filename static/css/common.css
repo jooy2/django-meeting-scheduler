@@ -257,7 +257,7 @@ label {
 }
 
 .app-schedule-text {
-    overflow-x: scroll;
+    overflow-x: auto;
     word-break: break-all;
 }
 

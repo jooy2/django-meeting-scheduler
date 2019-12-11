@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -84,6 +87,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Load secret data
+with open('secret.json', 'r') as f:
+    secret = json.loads(f.read())
+# with 함수는 자동으로 파일을 닫아준다
+
+
+def get_value_from_secret(setting, secret_key=secret):
+    try:
+        return secret_key[setting]
+    except KeyError:
+        raise ImproperlyConfigured("Set key '{0}' in secret.json".format(setting))
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = get_value_from_secret('SECRET_KEY')
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
