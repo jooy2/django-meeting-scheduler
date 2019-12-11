@@ -75,6 +75,14 @@ label {
     padding: 0 !important;
 }
 
+.app-title {
+    color: #535353;
+    font-size: 2.1em;
+    font-weight: 600;
+    margin-top: 50px;
+    margin-bottom: 0;
+}
+
 .app-form {
     border: 1px solid #f7f7f7;
     border-radius: 30px;

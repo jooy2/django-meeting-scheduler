@@ -8,13 +8,39 @@
 
 {% block content %}
     <div class="row no-gutters">
-        <div class="offset-7 col-5 offset-md-8 col-md-4 offset-lg-10 col-lg-2">
+        <div class="col-7 col-md-8 col-lg-10 align-self-center">
+            <h2 class="app-title no-margin">주간 일정</h2>
+        </div>
+        <div class="col-5 col-md-4 col-lg-2">
             <button id="btn-add-schedule" class="app-btn app-btn-lg color-gray w-100" type="button">
                 <i class="fa fa-plus mr-2"></i>일정 추가
             </button>
         </div>
     </div>
     {% include "schedule_view_weekly.html" %}
+
+    <div class="row no-gutters">
+        <div class="col-12 col-md-6">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="app-title">전체 회의</h2>
+                </div>
+                <div class="col-12">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="app-title">팀원 정보</h2>
+                </div>
+                <div class="col-12">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal content -->
     <div id="modal-add-schedule" class="d-none">
