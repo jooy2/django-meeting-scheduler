@@ -21,11 +21,13 @@ class MainView(LoginRequiredMixin, View):
         participants = Participants.get_all_participants()
         date_array = MeetingSchedule.get_after_7_days()
         schedule_json = MeetingSchedule.get_weekly_schedule(request)
+        schedule_all = MeetingSchedule.get_all_schedule()
 
         return render(request, 'main.html', {
             'form': form,
             'participants': participants,
             'schedule': schedule_json,
+            'schedule_all': schedule_all,
             'all_date': date_array,
         })
 
@@ -145,10 +147,9 @@ class MeetingEditView(View):
 class Participants:
     @staticmethod
     def get_all_participants():
-        participants_data = User.objects.values_list('nickname', flat=True)
         participants_json = []
 
-        for val in participants_data:
+        for val in User.objects.values_list('nickname', flat=True):
             participants_json.append({'value': val})
 
         return participants_json
@@ -156,14 +157,11 @@ class Participants:
     @staticmethod
     def get_current_participants(pk):
         user = User.objects
-        user_data = user.values_list('id', 'nickname')
         participants_data = Meeting.objects.filter(id=pk).values_list('participants')
         participants_json = []
 
-        for val in user_data:
-            query_data = participants_data.filter(participants=val)
-
-            if query_data.exists():
+        for val in user.values_list('id', 'nickname'):
+            if participants_data.filter(participants=val).exists():
                 nickname = user.filter(id=val[0]).values_list('nickname', flat=True)[0]
                 participants_json.append({'value': nickname, 'selected': 1})
             else:
@@ -189,7 +187,6 @@ class MeetingSchedule:
         schedule_json = {}
         date_now = datetime.datetime.now()
 
-        # get schedule 7 days
         for current_days in range(0, 7):
             current_date = date_now + datetime.timedelta(days=current_days)
             current_date_format = current_date.strftime('%Y-%m-%d')
@@ -199,32 +196,30 @@ class MeetingSchedule:
             )
 
             for data in schedule_data:
-                if date_now >= data.meet_date:
-                    date_over = '1'
-                else:
-                    date_over = '0'
-
-                if data.participants.filter(id=request.user.id):
-                    joined = '1'
-                else:
-                    joined = '0'
+                date_over = '1' if date_now >= data.meet_date else '0'
+                joined = '1' if data.participants.filter(id=request.user.id) else '0'
+                progress = '1' if data.progress else '0'
 
                 schedule_json[data.id] = ({
                     'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined
+                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined, 'schedule_ended': progress,
                 })
 
         return schedule_json
+
+    @staticmethod
+    def get_all_schedule():
+        schedule = Meeting.objects.all().order_by('-id')[:15]
+        return schedule
 
 
 class Comments:
     @staticmethod
     def delete(request):
-        message = ''
         if request.method == "POST":
-            json_data = json.loads(request.body)
-            comment_id = json_data['pk']
+            comment_id = json.loads(request.body)['pk']
             comment = get_object_or_404(Comment, pk=comment_id)
+
             if comment.author.pk == request.user.pk:
                 comment.delete()
                 message = 'removed'
@@ -241,11 +236,13 @@ class Comments:
             comment_id = json_data['pk']
             comment_text = json_data['text']
             comment = get_object_or_404(Comment, pk=comment_id)
+            
             if comment.author.pk == request.user.pk:
                 comment.text = comment_text
                 comment.save()
                 message = 'modify'
             else:
                 message = 'fail'
-        context = {'success': message}
-        return HttpResponse(json.dumps(context, ensure_ascii=False), content_type='application/json')
+                
+            context = {'success': message}
+            return HttpResponse(json.dumps(context, ensure_ascii=False), content_type='application/json')
