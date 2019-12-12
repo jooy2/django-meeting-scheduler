@@ -364,3 +364,12 @@ label {
     padding: 40px 30px;
     box-shadow: 1px 1px 3px #d0d0d0;
 }
+
+.app-auth-area h2 {
+    font-weight: 300;
+    color: #8e8e8e;
+}
+
+.display {
+    display: none;
+}
