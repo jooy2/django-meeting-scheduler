@@ -246,6 +246,11 @@ label {
     color: #656565 !important;
 }
 
+.bg-color-green {
+    background: #2fbb4d !important;
+    color: #fffdfd !important;
+}
+
 .color-gray {
     color: #656565 !important;
 }
