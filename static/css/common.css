@@ -320,3 +320,7 @@ label {
     font-weight: 300;
     color: #8e8e8e;
 }
+
+.display {
+    display: none;
+}
