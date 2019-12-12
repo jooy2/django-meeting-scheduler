@@ -9,10 +9,10 @@
 {% block content %}
     <div class="app-schedule-body">
         <div class="row mb-4">
-            <div class="col-8">
+            <div class="col-12 col-lg-8">
                 <h2 class="app-schedule-title">{{ meeting.meet_title }}</h2>
             </div>
-            <div class="col-4 text-right align-self-center">
+            <div class="col-12 col-lg-4 text-right align-self-center">
                 <button class="app-btn app-btn-lg mr-1"
                         onclick="location.href='{% url 'meeting_edit' pk=meeting.id %}'">
                     편집
@@ -20,9 +20,9 @@
                 <button class="app-btn app-btn-lg bg-color-gray" onclick="location.href='{% url 'main' %}'">목록</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-9">
-                <div class="row">
+        <div class="row no-gutters">
+            <div class="col-12 col-lg-9 pr-lg-3">
+                <div class="row no-gutters">
                     <div class="col-12">
                         <h3 class="app-schedule-sub-title no-margin"><i class="fa fa-bookmark mr-2"></i>주제</h3>
                         {{ meeting.meet_desc }}
@@ -45,8 +45,19 @@
                     </div>
                 </div><!-- row -->
             </div><!-- col -->
-            <div class="col-3 app-schedule-aside">
-                <div class="row">
+            <div class="col-12 col-lg-3 app-schedule-aside">
+                <div class="row no-gutters">
+                    <div class="col-12">
+                        <p>
+                            <span class="meeting-status {% if meeting.progress %}active{% endif %}">
+                                {% if meeting.progress %}
+                                    <i class="fa fa-check-circle mx-2"></i>완료된 회의
+                                {% else %}
+                                    <i class="fa fa-ellipsis-h mx-2"></i>예정된 회의
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
                     <div class="col-12">
                         <p class="app-schedule-meta"><i class="fa fa-clock mr-2"></i>{{ meeting.meet_date }}</p>
                         <p class="app-schedule-meta"><i class="fa fa-user-alt mr-2"></i>{{ meeting.proponent }}이(가) 제안함
@@ -62,10 +73,7 @@
             </div>
         </div><!-- row -->
     </div>
-    <div class="row">
-        <hr class="col-12"/>
-    </div>
-    <div class="app-comment-head">
+    <div class="app-comment-head mt-5">
         <h4><i class="fa fa-comment-alt mr-2"></i>댓글 (<span id="comment-count">{{ meeting.comments.count }}</span>)</h4>
     </div>
     <div class="app-comment-body">

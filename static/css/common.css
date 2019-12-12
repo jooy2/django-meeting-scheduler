@@ -308,7 +308,7 @@ label {
 
 .app-schedule-aside {
     border-radius: 10px;
-    padding: 35px 20px;
+    padding: 35px 20px !important;
     background: #f3f3f3;
 }
 
@@ -320,6 +320,18 @@ label {
     font-weight: 300;
     cursor: pointer;
     margin: 0 3px;
+}
+
+.app-schedule-aside .meeting-status {
+    background: #d26363;
+    user-select: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.app-schedule-aside .meeting-status.active {
+    background: #59b159 !important;
 }
 
 .app-comment-body {
