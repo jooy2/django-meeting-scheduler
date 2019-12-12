@@ -96,18 +96,16 @@
                     <strong class="mr-2"><i class="fa fa-user-circle mr-2"></i>{{ comment.author }}
                     </strong>{{ comment.created_date }}
                 </div>
-                <div class="comment-text" value="{{ comment.text }}">
-                    {{ comment.text }}
-                </div>
+                <div class="comment-text">{{ comment.text }}</div>
                 <div>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-modify" type="button">수정
+                    <button data-id="{{ comment.id }}" class="app-btn bg-color-gray btn-comment-modify" type="button">수정
                     </button>
                     <button data-id="{{ comment.id }}" class="app-btn bg-color-gray btn-comment-delete" type="button">삭제
                     </button>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-done display"
+                    <button data-id="{{ comment.id }}" class="app-btn bg-color-green btn-comment-done d-none"
                             type="button">확인
                     </button>
-                    <button data-id="{{ comment.id }}" class="app-btn color-gray btn-comment-cancel display"
+                    <button data-id="{{ comment.id }}" class="app-btn bg-color-gray btn-comment-cancel d-none"
                             type="button">취소
                     </button>
                 </div>
@@ -125,8 +123,9 @@
         const commentCancel = document.querySelectorAll('.btn-comment-cancel');
         const xhr = new XMLHttpRequest();
 
-        const tag1 = "<textarea name=\"text\" class=\"form-control comment-input\" placeholder=\"내용\" aria-label=\"내용\" required=\"\" id=\"id_text\"></textarea>";
-        const tag2 = "<div class=\"comment-text\" value=\"\"></div>";
+        const commentTextArea = "<textarea class=\"form-control comment-input\" placeholder=\"내용\" aria-label=\"내용\" required></textarea>";
+        const commentDivArea = "<div class=\"comment-text\" value=\"\"></div>";
+
         if (commentDelete != null) {
             Array.from(commentDelete).forEach(function (el) {
                 el.onclick = function () {
@@ -137,7 +136,7 @@
                                 let countEl = document.getElementById('comment-count');
                                 countEl.innerHTML = (Number(countEl.innerHTML) - 1).toString();
                             } else {
-                                alert('문제가 발생하였습니다.');
+                                alert('댓글 삭제 도중 알 수 없는 문제가 발생하였습니다.');
                             }
                         }
                     };
@@ -153,14 +152,14 @@
         if (commentModify != null) {
             Array.from(commentModify).forEach(function (el) {
                 el.onclick = function () {
-                    const commentBox = el.parentElement.parentElement.querySelector('.comment-text');
-                    commentBox.innerHTML = tag1;
-                    const commentText = commentBox.childNodes.item(0);
-                    commentText.innerHTML = commentBox.getAttribute('value');
-                    el.parentElement.querySelector('.btn-comment-modify').classList.add('display');
-                    el.parentElement.querySelector('.btn-comment-delete').classList.add('display');
-                    el.parentElement.querySelector('.btn-comment-done').classList.remove('display');
-                    el.parentElement.querySelector('.btn-comment-cancel').classList.remove('display');
+                    const commentBox = this.parentElement.parentElement.querySelector('.comment-text');
+                    const commentText = commentBox.innerHTML;
+                    commentBox.innerHTML = commentTextArea;
+                    commentBox.querySelector('.comment-input').innerHTML = commentText;
+                    el.parentElement.querySelector('.btn-comment-modify').classList.add('d-none');
+                    el.parentElement.querySelector('.btn-comment-delete').classList.add('d-none');
+                    el.parentElement.querySelector('.btn-comment-done').classList.remove('d-none');
+                    el.parentElement.querySelector('.btn-comment-cancel').classList.remove('d-none');
                 }
             });
         }
@@ -172,12 +171,12 @@
                     xhr.onload = function () {
                         if (xhr.status === 200 || xhr.status === 201) {
                             if (stringToJson(xhr.responseText).success === 'modify') {
-                                commentBox.innerHTML = tag2;
+                                commentBox.innerHTML = commentDivArea;
                                 commentBox.innerHTML = commentText;
-                                el.parentElement.querySelector('.btn-comment-modify').classList.remove('display');
-                                el.parentElement.querySelector('.btn-comment-delete').classList.remove('display');
-                                el.parentElement.querySelector('.btn-comment-done').classList.add('display');
-                                el.parentElement.querySelector('.btn-comment-cancel').classList.add('display');
+                                el.parentElement.querySelector('.btn-comment-modify').classList.remove('d-none');
+                                el.parentElement.querySelector('.btn-comment-delete').classList.remove('d-none');
+                                el.parentElement.querySelector('.btn-comment-done').classList.add('d-none');
+                                el.parentElement.querySelector('.btn-comment-cancel').classList.add('d-none');
                             } else {
                                 alert('문제가 발생하였습니다.');
                             }
@@ -197,17 +196,14 @@
             Array.from(commentCancel).forEach(function (el) {
                 el.onclick = function () {
                     const commentBox = el.parentElement.parentElement.querySelector('.comment-text');
-                    commentBox.innerHTML = tag2;
-                    const commentText = commentBox.childNodes.item(0);
-                    console.log(commentBox.getAttribute('value'));
-                    commentText.innerHTML = commentBox.getAttribute('value');
-                    el.parentElement.querySelector('.btn-comment-modify').classList.remove('display');
-                    el.parentElement.querySelector('.btn-comment-delete').classList.remove('display');
-                    el.parentElement.querySelector('.btn-comment-done').classList.add('display');
-                    el.parentElement.querySelector('.btn-comment-cancel').classList.add('display');
+                    const commentInput = commentBox.childNodes.item(0);
+                    commentBox.innerHTML = commentInput.innerHTML;
+                    el.parentElement.querySelector('.btn-comment-modify').classList.remove('d-none');
+                    el.parentElement.querySelector('.btn-comment-delete').classList.remove('d-none');
+                    el.parentElement.querySelector('.btn-comment-done').classList.add('d-none');
+                    el.parentElement.querySelector('.btn-comment-cancel').classList.add('d-none');
                 }
             });
         }
     </script>
 {% endblock script %}
-
