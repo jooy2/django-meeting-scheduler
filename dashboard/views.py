@@ -18,17 +18,14 @@ class MainView(LoginRequiredMixin, View):
     @staticmethod
     def get(request):
         form = MeetingAddForm
-        participants = Participants.get_all_participants()
-        date_array = MeetingSchedule.get_after_7_days()
-        schedule_json = MeetingSchedule.get_weekly_schedule(request)
-        schedule_all = MeetingSchedule.get_all_schedule()
 
         return render(request, 'main.html', {
             'form': form,
-            'participants': participants,
-            'schedule': schedule_json,
-            'schedule_all': schedule_all,
-            'all_date': date_array,
+            'participants': Participants.get_all_participants(),
+            'schedule': MeetingSchedule.get_weekly_schedule(request),
+            'schedule_all': MeetingSchedule.get_all_schedule(),
+            'all_date': MeetingSchedule.get_after_7_days(),
+            'comments_all': Comments.get_all_comments(),
         })
 
     @staticmethod
@@ -74,16 +71,11 @@ class RegisterView(View):
 class MeetingDetailView(View):
     @staticmethod
     def get(request, pk):
-        meeting = get_object_or_404(Meeting, pk=pk)
-        comment_form = CommentForm()
-        contents = Meeting.objects.get(attachment_ptr_id=pk)
-        participants = Participants.get_current_participants(pk)
-
         return render(request, 'meeting_detail.html', {
-            'meeting': meeting,
-            'comment': comment_form,
-            'contents': contents,
-            'participants': participants,
+            'meeting': get_object_or_404(Meeting, pk=pk),
+            'comment': CommentForm(),
+            'contents': Meeting.objects.get(attachment_ptr_id=pk),
+            'participants': Participants.get_current_participants(pk),
         })
 
     @staticmethod
@@ -140,8 +132,8 @@ class MeetingEditView(View):
             return redirect('main')
 
         return render(request, 'meeting_edit.html', {'meeting': meeting, 'form': form,
-                                                       'participants': participants,
-                                                       'current_participants': current_participants})
+                                                     'participants': participants,
+                                                     'current_participants': current_participants})
 
 
 class Participants:
@@ -189,7 +181,6 @@ class MeetingSchedule:
 
         for current_days in range(0, 7):
             current_date = date_now + datetime.timedelta(days=current_days)
-            current_date_format = current_date.strftime('%Y-%m-%d')
 
             schedule_data = Meeting.objects.filter(
                 meet_date__contains=datetime.date(current_date.year, current_date.month, current_date.day)
@@ -201,19 +192,26 @@ class MeetingSchedule:
                 progress = '1' if data.progress else '0'
 
                 schedule_json[data.id] = ({
-                    'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'), 'date': current_date_format,
-                    'title': data.meet_title, 'time_expired': date_over, 'joined': joined, 'schedule_ended': progress,
+                    'id': data.id, 'time': data.meet_date.strftime('%p %H:%M'),
+                    'date': current_date.strftime('%Y-%m-%d'),
+                    'title': data.meet_title, 'time_expired': date_over,
+                    'joined': joined, 'schedule_ended': progress,
                 })
 
         return schedule_json
 
     @staticmethod
     def get_all_schedule():
-        schedule = Meeting.objects.all().order_by('-meet_date')[:15]
+        schedule = Meeting.objects.all().order_by('-meet_date')[:12]
         return schedule
 
 
 class Comments:
+    @staticmethod
+    def get_all_comments():
+        comments = Comment.objects.all().order_by('-id')[:6]
+        return comments
+
     @staticmethod
     def delete(request):
         if request.method == "POST":
@@ -232,12 +230,10 @@ class Comments:
     def modify(request):
         if request.method == "POST":
             json_data = json.loads(request.body)
-            comment_id = json_data['pk']
-            comment_text = json_data['text']
-            comment = get_object_or_404(Comment, pk=comment_id)
+            comment = get_object_or_404(Comment, pk=json_data['pk'])
             
             if comment.author.pk == request.user.pk:
-                comment.text = comment_text
+                comment.text = json_data['text']
                 comment.save()
                 message = 'modify'
             else:
