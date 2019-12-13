@@ -94,7 +94,7 @@
             <div class="app-comment-item">
                 <div>
                     <strong class="mr-2"><i class="fa fa-user-circle mr-2"></i>{{ comment.author }}
-                    </strong>{{ comment.created_date }}
+                    </strong><span class="comment-meta">{{ comment.created_date }}</span>
                 </div>
                 <div class="comment-text">{{ comment.text }}</div>
                 <div>
@@ -140,6 +140,8 @@
                             }
                         }
                     };
+                    if (!confirm("정말로 이 댓글을 삭제하시겠습니까? 삭제하면 복구하실 수 없습니다."))
+                        return false;
                     xhr.open('POST', '{% url 'comment_delete' %}');
                     xhr.setRequestHeader('Content-Type', 'application/json;');
                     addCsrfToken(xhr);

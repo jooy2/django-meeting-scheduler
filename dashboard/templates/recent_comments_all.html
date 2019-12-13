@@ -1,0 +1,16 @@
+{% block content %}
+    <div class="app-comment-body">
+    {% for comment in comments_all %}
+        <div class="app-comment-item">
+            <div>
+                <strong class="mr-2"><i class="fa fa-user-circle mr-2"></i>{{ comment.author }}
+                </strong><span class="comment-meta">{{ comment.created_date }} (<a href="{% url 'meeting_detail' pk=comment.meet_schedule.id %}">{{ comment.meet_schedule.meet_title|truncatechars:20 }}</a>에서)</span>
+            </div>
+            <div class="comment-text">{{ comment.text }}</div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}
