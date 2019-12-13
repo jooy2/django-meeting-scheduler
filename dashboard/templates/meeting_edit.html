@@ -13,8 +13,12 @@
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="row my-2">
-                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-calendar-day mr-2"></i>회의 일자</div>
-                    <div class="col-9">{{ form.meet_date }}</div>
+                    <div class="col-3 app-form-label align-self-center"><i class="fa fa-calendar-day mr-2"></i>회의 일자
+                    </div>
+                    <div class="col-5">{{ form.meet_date }}</div>
+                    <div id="btn-done" data-active="false" class="toolbar-item col-4 text-right">
+                        회의록 작성완료<i class="fa fa-circle ml-2"></i>{{ form.progress }}
+                    </div>
                 </div>
                 <div class="row my-2">
                     <div class="col-3 app-form-label align-self-center"><i class="fa fa-comment mr-2"></i>회의 제목</div>
@@ -46,7 +50,9 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-right">
-                        <button onclick="location.href='{% url 'meeting_detail' pk=meeting.id %}'" type="button" class="app-btn app-btn-lg bg-color-gray mr-2">취소</button>
+                        <button onclick="location.href='{% url 'meeting_detail' pk=meeting.id %}'" type="button"
+                                class="app-btn app-btn-lg bg-color-gray mr-2">취소
+                        </button>
                         <button type="submit" class="app-btn app-btn-lg">변경내용 저장</button>
                     </div>
                 </div>
@@ -69,6 +75,31 @@
             noChoicesText: '사용자를 선택해주세요.',
             itemSelectText: '클릭하여 선택',
         });
+
+        if (document.getElementById('progress').checked === true) {
+            document.getElementById('btn-done').classList.add('active');
+            document.getElementById('btn-done').setAttribute('data-active', 'true');
+            document.getElementById('btn-done').children[0].classList.remove('fa-circle');
+            document.getElementById('btn-done').children[0].classList.add('fa-check-circle');
+        }
+
+        document.getElementById('btn-done').onclick = function () {
+            if (this.getAttribute('data-active') === 'true') {
+                this.classList.remove('active');
+                this.setAttribute('data-active', 'false');
+                this.children[0].classList.add('fa-circle');
+                this.children[0].classList.remove('fa-check-circle');
+                this.children[1].checked = false;
+                console.log(this.children[1].checked);
+            } else {
+                this.classList.add('active');
+                this.setAttribute('data-active', 'true');
+                this.children[0].classList.remove('fa-circle');
+                this.children[0].classList.add('fa-check-circle');
+                this.children[1].checked = true;
+                console.log(this.children[1].checked);
+            }
+        };
     </script>
 {% endblock %}
 

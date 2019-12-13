@@ -209,7 +209,7 @@ class MeetingSchedule:
 
     @staticmethod
     def get_all_schedule():
-        schedule = Meeting.objects.all().order_by('-id')[:15]
+        schedule = Meeting.objects.all().order_by('-meet_date')[:15]
         return schedule
 
 
@@ -230,7 +230,6 @@ class Comments:
 
     @staticmethod
     def modify(request):
-        message = ''
         if request.method == "POST":
             json_data = json.loads(request.body)
             comment_id = json_data['pk']
@@ -243,6 +242,5 @@ class Comments:
                 message = 'modify'
             else:
                 message = 'fail'
-                
             context = {'success': message}
             return HttpResponse(json.dumps(context, ensure_ascii=False), content_type='application/json')
