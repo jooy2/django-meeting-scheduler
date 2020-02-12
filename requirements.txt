@@ -1,5 +1,5 @@
 asgiref==3.2.3
-Django==2.2.8
+Django==2.2.10
 django-flatpickr==1.0.1
 django-summernote==0.8.11.4
 mysqlclient==1.4.6
