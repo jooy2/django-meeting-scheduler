@@ -64,7 +64,7 @@ Django 프레임워크를 사용한 회의 스케줄 관리 애플리케이션
 ```text
 MIT License
 
-Copyright (c) 2019 leejooy96, jangdoll
+Copyright (c) 2020 leejooy96, jangdoll
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
