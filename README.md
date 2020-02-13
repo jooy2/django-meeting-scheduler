@@ -10,8 +10,8 @@ Django 프레임워크를 사용한 회의 스케줄 관리 애플리케이션
 
 
 ## Dependencies
-- Python 3.7.x
-- Django 2.2.x
+- Python 3.7.4 또는 그 이상
+- Django 3.x 또는 그 이상
 
 
 ## Installation
@@ -53,10 +53,7 @@ Django 프레임워크를 사용한 회의 스케줄 관리 애플리케이션
 * **jangdoll** (yunjang2@gmail.com)
 
 
-## Roadmap
-- [x] 회의 등록 페이지
-- [x] 주간 회의 보기
-- [x] 회의 일정 자세히 보기 및 수정
+## Todo
 - [ ] 사용자 프로필 페이지
 - [ ] 관리자 페이지
 - [ ] 사이트 디자인 및 기능 설정
